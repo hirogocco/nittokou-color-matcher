@@ -315,18 +315,124 @@
   }
   .manual-input-area { display:none; padding:8px 16px 4px; }
   .manual-input-area.show { display:block; }
-  .manual-input {
-    width:100%; border:1.5px solid var(--accent); border-radius:10px;
-    padding:10px 12px; font-size:15px; font-family:'DM Mono',monospace;
-    font-weight:600; color:var(--text); background:var(--surface);
-    outline:none; letter-spacing:0.05em;
+
+  /* 分割入力フォーム */
+  .split-row {
+    display:flex; align-items:stretch;
+    border:2px solid var(--border); border-radius:12px;
+    overflow:hidden; height:56px; background:var(--surface);
+    transition:border-color 0.2s;
   }
-  .manual-input::placeholder { color:var(--border); font-weight:400; }
+  .split-row.focused { border-color:var(--accent); }
+  .split-row.split-success { border-color:var(--green); }
+  .split-row.split-error { border-color:var(--red); animation:mshake 0.25s ease; }
+  @keyframes mshake {
+    0%,100%{transform:translateX(0);}
+    25%{transform:translateX(-5px);}
+    75%{transform:translateX(5px);}
+  }
+  .split-pfx {
+    width:72px; border:none; outline:none; background:transparent;
+    font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
+    color:var(--text); text-align:center; text-transform:uppercase; padding:0 4px; flex-shrink:0;
+  }
+  .split-pfx::placeholder { color:var(--border); font-weight:400; font-size:18px; }
+  .split-sep {
+    font-size:20px; font-family:'DM Mono',monospace; font-weight:500;
+    color:var(--text-sub); display:flex; align-items:center;
+    padding:0 2px; flex-shrink:0; user-select:none;
+  }
+  .split-sfx-num {
+    width:52px; border:none; outline:none; background:transparent;
+    font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
+    color:var(--text); text-align:center; padding:0 2px; flex-shrink:0;
+  }
+  .split-sfx-num::placeholder { color:var(--border); font-weight:400; font-size:18px; }
+  .split-drum-btn {
+    flex:1; border:none; border-left:1px solid var(--border);
+    background:var(--surface2); cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:4px;
+  }
+  .split-drum-val {
+    font-size:24px; font-family:'DM Mono',monospace; font-weight:700; color:var(--accent);
+  }
+  .split-drum-arrow {
+    display:flex; flex-direction:column; gap:1px;
+    color:var(--text-sub); font-size:9px; line-height:1;
+  }
+  .split-sfx-n {
+    flex:1; border:none; outline:none; background:transparent;
+    font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
+    color:var(--text); text-align:center; padding:0 8px; display:none;
+  }
+  .split-sfx-n.show { display:block; }
+  .split-sfx-n::placeholder { color:var(--border); font-weight:400; font-size:18px; }
+  .split-hint {
+    margin-top:6px; font-size:11px; color:var(--text-sub);
+    font-family:'DM Mono',monospace;
+    display:flex; gap:4px; align-items:center; flex-wrap:wrap;
+  }
+  .split-hint-ex {
+    background:var(--surface2); border-radius:4px;
+    padding:1px 6px; font-weight:600; color:var(--text);
+  }
+  .split-val-result {
+    margin-top:10px; border-radius:10px; padding:10px 12px;
+    display:none; align-items:flex-start; gap:8px; line-height:1.5;
+  }
+  .split-val-result.show { display:flex; }
+  .split-val-result.ok { background:#EDFBF3; }
+  .split-val-result.ng { background:#FEF0EE; }
+  .split-val-icon { font-size:15px; flex-shrink:0; margin-top:2px; }
+  .split-val-ok { font-size:13px; color:#1A7A45; font-weight:500; }
+  .split-val-ok strong { font-family:'DM Mono',monospace; font-weight:700; }
+  .split-val-ng-code { font-size:14px; font-weight:700; color:var(--red); font-family:'DM Mono',monospace; display:block; }
+  .split-val-ng-msg { font-size:13px; font-weight:700; color:var(--red); }
+  .split-val-ng-sub { font-size:12px; color:#8A3020; margin-top:2px; }
+  .split-val-suggest { margin-top:6px; display:flex; flex-wrap:wrap; gap:4px; }
+  .split-suggest-btn {
+    background:white; border:1.5px solid #E8B0A8; border-radius:8px;
+    padding:4px 10px; font-size:13px; font-family:'DM Mono',monospace;
+    font-weight:700; color:var(--red); cursor:pointer;
+  }
   .manual-confirm-btn {
-    width:100%; margin-top:8px; background:var(--accent); color:white; border:none;
-    border-radius:10px; padding:11px;
+    width:100%; margin-top:12px; background:var(--accent); color:white; border:none;
+    border-radius:10px; padding:13px;
     font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
   }
+  .manual-confirm-btn:disabled { background:var(--border); color:var(--text-sub); cursor:default; }
+
+  /* ドラムロールポップアップ（手動入力用） */
+  .manual-drum-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.4); z-index:200; align-items:flex-end;
+  }
+  .manual-drum-overlay.show { display:flex; }
+  .manual-drum-popup {
+    background:var(--surface); width:100%;
+    border-radius:20px 20px 0 0; padding:0 0 40px;
+    max-height:70vh; overflow-y:auto;
+  }
+  .manual-drum-popup::-webkit-scrollbar { display:none; }
+  .manual-drum-handle {
+    width:36px; height:4px; background:var(--border);
+    border-radius:2px; margin:10px auto 12px;
+  }
+  .manual-drum-title {
+    font-size:12px; font-weight:700; color:var(--text-sub);
+    font-family:'DM Mono',monospace; letter-spacing:0.06em;
+    text-transform:uppercase; padding:0 16px 10px;
+  }
+  .manual-drum-item {
+    padding:13px 16px; font-size:18px;
+    font-family:'DM Mono',monospace; font-weight:600;
+    color:var(--text-sub); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; cursor:pointer;
+  }
+  .manual-drum-item:last-child { border-bottom:none; }
+  .manual-drum-item.selected { color:var(--accent); font-weight:700; }
+  .manual-drum-item-check { color:var(--accent); font-size:16px; opacity:0; }
+  .manual-drum-item.selected .manual-drum-item-check { opacity:1; }
 
   /* ローディング */
   .loading-overlay {
@@ -444,8 +550,42 @@
       <div id="refCandidateList"></div>
       <button class="ref-manual-btn" onclick="toggleManualInput()">＋ 該当なし・直接入力</button>
       <div class="manual-input-area" id="manualInputArea">
-        <input class="manual-input" type="text" placeholder="例: 09-70H" id="manualCode" />
-        <button class="manual-confirm-btn" onclick="confirmManual()">確定</button>
+        <!-- 分割入力フォーム -->
+        <div class="split-row" id="splitRow">
+          <input class="split-pfx" id="splitPfx" type="text" inputmode="text"
+            maxlength="4" placeholder="09" autocomplete="off" spellcheck="false"
+            oninput="onSplitPfx()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
+          <div class="split-sep">—</div>
+          <input class="split-sfx-num" id="splitSfxNum" type="text" inputmode="numeric"
+            maxlength="2" placeholder="70" autocomplete="off" spellcheck="false"
+            oninput="onSplitSfxNum()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
+          <button class="split-drum-btn" id="splitDrumBtn" onclick="openManualDrum()">
+            <div class="split-drum-val" id="splitDrumVal">H</div>
+            <div class="split-drum-arrow"><span>▲</span><span>▼</span></div>
+          </button>
+          <input class="split-sfx-n" id="splitSfxN" type="text" inputmode="numeric"
+            maxlength="4" placeholder="85" autocomplete="off" spellcheck="false"
+            oninput="validateManualInput()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
+        </div>
+        <div class="split-hint">
+          例：<span class="split-hint-ex">09</span>—<span class="split-hint-ex">70</span><span class="split-hint-ex">H</span>
+          &nbsp;/&nbsp;版記号付：<span class="split-hint-ex">A09</span>—<span class="split-hint-ex">70</span><span class="split-hint-ex">H</span>
+          &nbsp;/&nbsp;無彩色：<span class="split-hint-ex">N</span>—<span class="split-hint-ex">85</span>
+        </div>
+        <div class="split-val-result" id="splitValResult">
+          <div class="split-val-icon" id="splitValIcon"></div>
+          <div id="splitValBody"></div>
+        </div>
+        <button class="manual-confirm-btn" id="manualConfirmBtn" disabled onclick="confirmManual()">確定</button>
+      </div>
+
+      <!-- ドラムロール（手動入力用） -->
+      <div class="manual-drum-overlay" id="manualDrumOverlay" onclick="if(event.target===this)closeManualDrum()">
+        <div class="manual-drum-popup">
+          <div class="manual-drum-handle"></div>
+          <div class="manual-drum-title">アルファベットを選択</div>
+          <div id="manualDrumItems"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -871,18 +1011,157 @@ function selectRef(el, code) {
   document.getElementById('manualInputArea').classList.remove('show');
   checkSearchBtn();
 }
-function toggleManualInput() {
-  document.getElementById('manualInputArea').classList.toggle('show');
-}
-function confirmManual() {
-  const val = document.getElementById('manualCode').value.trim().toUpperCase();
-  if (!val) return;
-  state.refCode = val;
-  document.getElementById('refBadge').textContent = val;
-  document.getElementById('refOverlay').classList.remove('show');
-  document.getElementById('manualInputArea').classList.remove('show');
-  checkSearchBtn();
-}
+// ---- 手動入力（分割フォーム） ----
+  const SPLIT_ALPHAS = ['A','B','C','D','F','H','L','P','T','V','W','X'];
+  let splitAlpha = 'H';
+  let splitIsN = false;
+
+  function toggleManualInput() {
+    const area = document.getElementById('manualInputArea');
+    const opening = !area.classList.contains('show');
+    area.classList.toggle('show');
+    if (opening) {
+      document.getElementById('splitPfx').value = '';
+      document.getElementById('splitSfxNum').value = '';
+      document.getElementById('splitSfxN').value = '';
+      splitAlpha = 'H'; splitIsN = false;
+      document.getElementById('splitDrumVal').textContent = 'H';
+      document.getElementById('splitSfxNum').style.display = '';
+      document.getElementById('splitDrumBtn').style.display = '';
+      document.getElementById('splitSfxN').classList.remove('show');
+      document.getElementById('splitRow').classList.remove('split-error','split-success','focused');
+      document.getElementById('splitValResult').className = 'split-val-result';
+      document.getElementById('manualConfirmBtn').disabled = true;
+    }
+  }
+
+  function splitStripVersion(raw) {
+    return raw.replace(/^[A-Z](?=[0-9]{2}|N$)/, '');
+  }
+
+  function onSplitPfx() {
+    const el = document.getElementById('splitPfx');
+    el.value = el.value.replace(/[\uFF01-\uFF5E]/g, c =>
+      String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).toUpperCase();
+    const core = splitStripVersion(el.value);
+    if (core === 'N') { setSplitNeutral(true); document.getElementById('splitSfxN').focus(); }
+    else if (/^[0-9]{2}$/.test(core)) { setSplitNeutral(false); document.getElementById('splitSfxNum').focus(); }
+    validateManualInput();
+  }
+
+  function onSplitSfxNum() {
+    document.getElementById('splitSfxNum').value =
+      document.getElementById('splitSfxNum').value.replace(/[^0-9]/g, '');
+    validateManualInput();
+  }
+
+  function setSplitNeutral(flag) {
+    splitIsN = flag;
+    document.getElementById('splitSfxNum').style.display = flag ? 'none' : '';
+    document.getElementById('splitDrumBtn').style.display = flag ? 'none' : '';
+    const sfxN = document.getElementById('splitSfxN');
+    if (flag) sfxN.classList.add('show'); else sfxN.classList.remove('show');
+  }
+
+  function getSplitCode() {
+    const raw = document.getElementById('splitPfx').value.trim().toUpperCase();
+    if (!raw) return null;
+    const core = splitStripVersion(raw);
+    if (splitIsN || core === 'N') {
+      const num = document.getElementById('splitSfxN').value.trim();
+      return num ? 'N-' + num : null;
+    } else {
+      if (!/^[0-9]{2}$/.test(core)) return null;
+      const num = document.getElementById('splitSfxNum').value.trim();
+      return num.length >= 2 ? core + '-' + num + splitAlpha : null;
+    }
+  }
+
+  function validateManualInput() {
+    const code = getSplitCode();
+    const row = document.getElementById('splitRow');
+    const res = document.getElementById('splitValResult');
+    const btn = document.getElementById('manualConfirmBtn');
+    row.classList.remove('split-error','split-success');
+    res.className = 'split-val-result';
+    btn.disabled = true;
+    if (!code) return;
+
+    const exact = state.db.some(e => e.code === code);
+    if (exact) {
+      row.classList.add('split-success');
+      res.classList.add('show','ok');
+      document.getElementById('splitValIcon').textContent = '✅';
+      document.getElementById('splitValBody').innerHTML =
+        '<div class="split-val-ok"><strong>' + code + '</strong> はDBに存在します</div>';
+      btn.disabled = false;
+    } else {
+      row.classList.add('split-error');
+      res.classList.add('show','ng');
+      document.getElementById('splitValIcon').textContent = '❌';
+      const pfxPart = code.split('-')[0];
+      const sugg = state.db.filter(e => e.code.startsWith(pfxPart + '-')).slice(0,4).map(e => e.code);
+      let html = '<div><span class="split-val-ng-code">' + code + '</span>' +
+        '<span class="split-val-ng-msg">は存在しません</span>';
+      if (sugg.length > 0) {
+        html += '<div class="split-val-ng-sub">近い番号：</div><div class="split-val-suggest">';
+        sugg.forEach(s => { html += '<button class="split-suggest-btn" onclick="applySplitSuggest(\'' + s + '\')">' + s + '</button>'; });
+        html += '</div>';
+      } else {
+        html += '<div class="split-val-ng-sub">色番号をご確認ください</div>';
+      }
+      document.getElementById('splitValBody').innerHTML = html + '</div>';
+    }
+  }
+
+  function applySplitSuggest(code) {
+    const [pfx, sfx] = code.split('-');
+    document.getElementById('splitPfx').value = pfx;
+    if (pfx === 'N') {
+      setSplitNeutral(true);
+      document.getElementById('splitSfxN').value = sfx;
+    } else {
+      setSplitNeutral(false);
+      document.getElementById('splitSfxNum').value = sfx.slice(0,-1);
+      splitAlpha = sfx.slice(-1);
+      document.getElementById('splitDrumVal').textContent = splitAlpha;
+    }
+    validateManualInput();
+  }
+
+  function splitRowFocus(on) {
+    const row = document.getElementById('splitRow');
+    if (on) row.classList.add('focused');
+    else setTimeout(() => {
+      if (!document.activeElement.closest('#splitRow'))
+        row.classList.remove('focused');
+    }, 100);
+  }
+
+  function openManualDrum() {
+    const list = document.getElementById('manualDrumItems');
+    list.innerHTML = '';
+    SPLIT_ALPHAS.forEach(a => {
+      const d = document.createElement('div');
+      d.className = 'manual-drum-item' + (a === splitAlpha ? ' selected' : '');
+      d.innerHTML = a + ' <span class="manual-drum-item-check">✓</span>';
+      d.onclick = () => { splitAlpha = a; document.getElementById('splitDrumVal').textContent = a; closeManualDrum(); validateManualInput(); };
+      list.appendChild(d);
+    });
+    document.getElementById('manualDrumOverlay').classList.add('show');
+  }
+  function closeManualDrum() { document.getElementById('manualDrumOverlay').classList.remove('show'); }
+
+  function confirmManual() {
+    const code = getSplitCode();
+    if (!code || !state.db.some(e => e.code === code)) return;
+    state.refCode = code;
+    document.getElementById('refBadge').textContent = code;
+    document.getElementById('refOverlay').classList.remove('show');
+    document.getElementById('manualInputArea').classList.remove('show');
+    closeManualDrum();
+    checkSearchBtn();
+  }
 
 // ============================================================
 // 設定
