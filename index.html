@@ -237,6 +237,7 @@
     color:var(--text); letter-spacing:0.05em;
   }
   .candidate-munsell { font-size:11px; color:var(--text-sub); font-family:'DM Mono',monospace; margin-top:2px; }
+  .candidate-page { font-size:11px; color:var(--accent); font-weight:600; margin-top:2px; }
   .candidate-delta { font-size:12px; font-family:'DM Mono',monospace; color:var(--text-sub); text-align:right; }
   .candidate-delta span { display:block; font-size:10px; margin-bottom:2px; }
   .delta-val { font-weight:700; color:var(--text); font-size:14px !important; }
@@ -331,7 +332,8 @@
   .split-row {
     display:flex; align-items:stretch;
     border:2px solid var(--border); border-radius:12px;
-    overflow:hidden; height:56px; background:var(--surface);
+    overflow:hidden; height:52px; background:var(--surface);
+    width:fit-content; margin:0 auto;
     transition:border-color 0.2s;
   }
   .split-row.focused { border-color:var(--accent); }
@@ -344,9 +346,9 @@
   }
   /* Nボタン */
   .split-n-btn {
-    width:52px; border:none; border-right:1px solid var(--border);
+    width:40px; border:none; border-right:1px solid var(--border);
     background:transparent; cursor:pointer;
-    font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
+    font-size:18px; font-family:'DM Mono',monospace; font-weight:600;
     color:var(--border); text-align:center; flex-shrink:0;
     transition:color 0.15s, background 0.15s;
     display:flex; align-items:center; justify-content:center;
@@ -356,9 +358,10 @@
   }
   /* 前半数字入力 */
   .split-pfx-num {
-    width:52px; border:none; outline:none; background:transparent;
+    width:42px; border:none; outline:none; background:transparent;
     font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
-    color:var(--text); text-align:center; padding:0 4px; flex-shrink:0;
+    color:var(--text); text-align:center; padding:0 2px; flex-shrink:0;
+    border-right:1px solid var(--border);
   }
   .split-pfx-num::placeholder { color:var(--border); font-weight:400; font-size:18px; }
   .split-sep {
@@ -367,15 +370,16 @@
     padding:0 2px; flex-shrink:0; user-select:none;
   }
   .split-sfx-num {
-    width:52px; border:none; outline:none; background:transparent;
+    width:42px; border:none; outline:none; background:transparent;
     font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
     color:var(--text); text-align:center; padding:0 2px; flex-shrink:0;
   }
   .split-sfx-num::placeholder { color:var(--border); font-weight:400; font-size:18px; }
   .split-drum-btn {
-    flex:1; border:none; border-left:1px solid var(--border);
+    width:60px; border:none; border-left:1px solid var(--border);
     background:var(--surface2); cursor:pointer;
     display:flex; align-items:center; justify-content:center; gap:4px;
+    flex-shrink:0;
   }
   .split-drum-val {
     font-size:24px; font-family:'DM Mono',monospace; font-weight:700; color:var(--accent);
@@ -385,9 +389,9 @@
     color:var(--text-sub); font-size:9px; line-height:1;
   }
   .split-sfx-n {
-    flex:1; border:none; outline:none; background:transparent;
+    width:96px; border:none; outline:none; background:transparent;
     font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
-    color:var(--text); text-align:center; padding:0 8px; display:none;
+    color:var(--text); text-align:center; padding:0 4px; display:none;
   }
   .split-sfx-n.show { display:block; }
   .split-sfx-n::placeholder { color:var(--border); font-weight:400; font-size:18px; }
@@ -1063,6 +1067,7 @@ function selectRef(el, code) {
       document.getElementById('splitDrumBtn').style.display = '';
       document.getElementById('splitSfxN').classList.remove('show');
       document.getElementById('splitRow').classList.remove('split-error','split-success','focused');
+      document.getElementById('splitRow').style.width = '';
       document.getElementById('splitValResult').className = 'split-val-result';
       document.getElementById('manualConfirmBtn').disabled = true;
     } else {
@@ -1075,6 +1080,13 @@ function selectRef(el, code) {
 
   function toggleNMode() {
     splitIsN = !splitIsN;
+    // N切替前にボックス幅を記録して固定
+    const row = document.getElementById('splitRow');
+    if (splitIsN) {
+      row.style.width = row.offsetWidth + 'px';
+    } else {
+      row.style.width = '';
+    }
     setSplitNeutral(splitIsN);
     validateManualInput();
     if (splitIsN) {
@@ -1310,12 +1322,14 @@ function showResults(results) {
     const col = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
     const card = document.createElement('div');
     card.className = 'candidate-card' + (idx===0 ? ' top' : '');
+    const pageLabel = e.page ? `ポケット版P${e.page}` : '';
     card.innerHTML = `
       <div class="candidate-rank ${idx===0?'rank1':''}">#${idx+1}</div>
       <div class="candidate-color" style="background:${col};"></div>
       <div class="candidate-info">
         <div class="candidate-code">${e.code}${idx===0?'<span class="best-badge">BEST</span>':''}</div>
         <div class="candidate-munsell">${e.H} ${e.V}/${e.C}</div>
+        ${pageLabel ? `<div class="candidate-page">${pageLabel}</div>` : ''}
       </div>
       <div class="candidate-delta"><span>ΔE</span><div class="delta-val">${item.delta.toFixed(1)}</div></div>
     `;
