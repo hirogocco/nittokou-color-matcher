@@ -288,6 +288,17 @@
     background:var(--surface); width:100%;
     border-radius:20px 20px 0 0; padding:0 0 40px;
     max-height:80vh; overflow-y:auto;
+    transition:max-height 0.3s ease;
+  }
+  .ref-panel.manual-mode {
+    max-height:50vh;
+  }
+  .ref-panel.manual-mode #refCandidateList,
+  .ref-panel.manual-mode .ref-panel-title {
+    display:none;
+  }
+  .ref-manual-btn.manual-active {
+    color:var(--text-sub); font-size:13px;
   }
   .ref-panel::-webkit-scrollbar { display:none; }
   .ref-panel-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:10px auto 12px; }
@@ -331,12 +342,25 @@
     25%{transform:translateX(-5px);}
     75%{transform:translateX(5px);}
   }
-  .split-pfx {
-    width:72px; border:none; outline:none; background:transparent;
+  /* Nボタン */
+  .split-n-btn {
+    width:52px; border:none; border-right:1px solid var(--border);
+    background:transparent; cursor:pointer;
     font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
-    color:var(--text); text-align:center; text-transform:uppercase; padding:0 4px; flex-shrink:0;
+    color:var(--border); text-align:center; flex-shrink:0;
+    transition:color 0.15s, background 0.15s;
+    display:flex; align-items:center; justify-content:center;
   }
-  .split-pfx::placeholder { color:var(--border); font-weight:400; font-size:18px; }
+  .split-n-btn.active {
+    color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+  /* 前半数字入力 */
+  .split-pfx-num {
+    width:52px; border:none; outline:none; background:transparent;
+    font-size:22px; font-family:'DM Mono',monospace; font-weight:600;
+    color:var(--text); text-align:center; padding:0 4px; flex-shrink:0;
+  }
+  .split-pfx-num::placeholder { color:var(--border); font-weight:400; font-size:18px; }
   .split-sep {
     font-size:20px; font-family:'DM Mono',monospace; font-weight:500;
     color:var(--text-sub); display:flex; align-items:center;
@@ -552,9 +576,10 @@
       <div class="manual-input-area" id="manualInputArea">
         <!-- 分割入力フォーム -->
         <div class="split-row" id="splitRow">
-          <input class="split-pfx" id="splitPfx" type="text" inputmode="text"
-            maxlength="4" placeholder="09" autocomplete="off" spellcheck="false"
-            oninput="onSplitPfx()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
+          <button class="split-n-btn" id="splitNBtn" onclick="toggleNMode()">N</button>
+          <input class="split-pfx-num" id="splitPfxNum" type="text" inputmode="numeric"
+            maxlength="2" placeholder="09" autocomplete="off" spellcheck="false"
+            oninput="onSplitPfxNum()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
           <div class="split-sep">—</div>
           <input class="split-sfx-num" id="splitSfxNum" type="text" inputmode="numeric"
             maxlength="2" placeholder="70" autocomplete="off" spellcheck="false"
@@ -568,9 +593,8 @@
             oninput="validateManualInput()" onfocus="splitRowFocus(true)" onblur="splitRowFocus(false)">
         </div>
         <div class="split-hint">
-          例：<span class="split-hint-ex">09</span>—<span class="split-hint-ex">70</span><span class="split-hint-ex">H</span>
-          &nbsp;/&nbsp;版記号付：<span class="split-hint-ex">A09</span>—<span class="split-hint-ex">70</span><span class="split-hint-ex">H</span>
-          &nbsp;/&nbsp;無彩色：<span class="split-hint-ex">N</span>—<span class="split-hint-ex">85</span>
+          有彩色：数字<span class="split-hint-ex">09</span>—<span class="split-hint-ex">70</span><span class="split-hint-ex">H</span>
+          &nbsp;/&nbsp;無彩色：<span class="split-hint-ex">N</span>ボタン—<span class="split-hint-ex">85</span>
         </div>
         <div class="split-val-result" id="splitValResult">
           <div class="split-val-icon" id="splitValIcon"></div>
@@ -1018,34 +1042,54 @@ function selectRef(el, code) {
 
   function toggleManualInput() {
     const area = document.getElementById('manualInputArea');
+    const panel = document.querySelector('.ref-panel');
+    const btn = document.querySelector('.ref-manual-btn');
     const opening = !area.classList.contains('show');
     area.classList.toggle('show');
     if (opening) {
-      document.getElementById('splitPfx').value = '';
+      // 候補リストを隠してパネルを小さくする
+      panel.classList.add('manual-mode');
+      btn.classList.add('manual-active');
+      btn.textContent = '← 候補に戻る';
+      // フォームをリセット
+      document.getElementById('splitPfxNum').value = '';
       document.getElementById('splitSfxNum').value = '';
       document.getElementById('splitSfxN').value = '';
       splitAlpha = 'H'; splitIsN = false;
       document.getElementById('splitDrumVal').textContent = 'H';
+      document.getElementById('splitNBtn').classList.remove('active');
+      document.getElementById('splitPfxNum').style.display = '';
       document.getElementById('splitSfxNum').style.display = '';
       document.getElementById('splitDrumBtn').style.display = '';
       document.getElementById('splitSfxN').classList.remove('show');
       document.getElementById('splitRow').classList.remove('split-error','split-success','focused');
       document.getElementById('splitValResult').className = 'split-val-result';
       document.getElementById('manualConfirmBtn').disabled = true;
+    } else {
+      // 候補リストを再表示
+      panel.classList.remove('manual-mode');
+      btn.classList.remove('manual-active');
+      btn.textContent = '＋ 該当なし・直接入力';
     }
   }
 
-  function splitStripVersion(raw) {
-    return raw.replace(/^[A-Z](?=[0-9]{2}|N$)/, '');
+  function toggleNMode() {
+    splitIsN = !splitIsN;
+    setSplitNeutral(splitIsN);
+    validateManualInput();
+    if (splitIsN) {
+      document.getElementById('splitSfxN').focus();
+    } else {
+      document.getElementById('splitPfxNum').focus();
+    }
   }
 
-  function onSplitPfx() {
-    const el = document.getElementById('splitPfx');
-    el.value = el.value.replace(/[\uFF01-\uFF5E]/g, c =>
-      String.fromCharCode(c.charCodeAt(0) - 0xFEE0)).toUpperCase();
-    const core = splitStripVersion(el.value);
-    if (core === 'N') { setSplitNeutral(true); document.getElementById('splitSfxN').focus(); }
-    else if (/^[0-9]{2}$/.test(core)) { setSplitNeutral(false); document.getElementById('splitSfxNum').focus(); }
+  function onSplitPfxNum() {
+    document.getElementById('splitPfxNum').value =
+      document.getElementById('splitPfxNum').value.replace(/[^0-9]/g, '');
+    if (document.getElementById('splitPfxNum').value.length === 2) {
+      document.getElementById('splitSfxNum').focus();
+    }
     validateManualInput();
   }
 
@@ -1057,23 +1101,35 @@ function selectRef(el, code) {
 
   function setSplitNeutral(flag) {
     splitIsN = flag;
-    document.getElementById('splitSfxNum').style.display = flag ? 'none' : '';
-    document.getElementById('splitDrumBtn').style.display = flag ? 'none' : '';
+    const nBtn = document.getElementById('splitNBtn');
+    const pfxNum = document.getElementById('splitPfxNum');
+    const sfxNum = document.getElementById('splitSfxNum');
+    const drumBtn = document.getElementById('splitDrumBtn');
     const sfxN = document.getElementById('splitSfxN');
-    if (flag) sfxN.classList.add('show'); else sfxN.classList.remove('show');
+    if (flag) {
+      nBtn.classList.add('active');
+      pfxNum.style.display = 'none';
+      sfxNum.style.display = 'none';
+      drumBtn.style.display = 'none';
+      sfxN.classList.add('show');
+    } else {
+      nBtn.classList.remove('active');
+      pfxNum.style.display = '';
+      sfxNum.style.display = '';
+      drumBtn.style.display = '';
+      sfxN.classList.remove('show');
+    }
   }
 
   function getSplitCode() {
-    const raw = document.getElementById('splitPfx').value.trim().toUpperCase();
-    if (!raw) return null;
-    const core = splitStripVersion(raw);
-    if (splitIsN || core === 'N') {
+    if (splitIsN) {
       const num = document.getElementById('splitSfxN').value.trim();
       return num ? 'N-' + num : null;
     } else {
-      if (!/^[0-9]{2}$/.test(core)) return null;
+      const pfx = document.getElementById('splitPfxNum').value.trim();
+      if (!/^[0-9]{2}$/.test(pfx)) return null;
       const num = document.getElementById('splitSfxNum').value.trim();
-      return num.length >= 2 ? core + '-' + num + splitAlpha : null;
+      return num.length >= 2 ? pfx + '-' + num + splitAlpha : null;
     }
   }
 
@@ -1116,12 +1172,12 @@ function selectRef(el, code) {
 
   function applySplitSuggest(code) {
     const [pfx, sfx] = code.split('-');
-    document.getElementById('splitPfx').value = pfx;
     if (pfx === 'N') {
       setSplitNeutral(true);
       document.getElementById('splitSfxN').value = sfx;
     } else {
       setSplitNeutral(false);
+      document.getElementById('splitPfxNum').value = pfx;
       document.getElementById('splitSfxNum').value = sfx.slice(0,-1);
       splitAlpha = sfx.slice(-1);
       document.getElementById('splitDrumVal').textContent = splitAlpha;
@@ -1159,6 +1215,12 @@ function selectRef(el, code) {
     document.getElementById('refBadge').textContent = code;
     document.getElementById('refOverlay').classList.remove('show');
     document.getElementById('manualInputArea').classList.remove('show');
+    // 候補リストを復元
+    const panel = document.querySelector('.ref-panel');
+    const btn = document.querySelector('.ref-manual-btn');
+    panel.classList.remove('manual-mode');
+    btn.classList.remove('manual-active');
+    btn.textContent = '＋ 該当なし・直接入力';
     closeManualDrum();
     checkSearchBtn();
   }
@@ -1195,19 +1257,20 @@ function doSearch() {
       const refEntry = state.db.find(e => e.code === state.refCode);
       if (!refEntry) { hideLoading(); alert('基準色番号が見つかりません: ' + state.refCode); return; }
 
-      // 2. 照明補正係数を計算（基準色の写真RGB vs DB Munsell→RGB）
+      // 2. 照明補正係数を計算（乗算補正：チャンネルごとのゲイン）
       const refRgbIdeal = munsellToRGB(refEntry.H, refEntry.V, refEntry.C);
-      const correction = [
-        refRgbIdeal[0] - state.rgb1[0],
-        refRgbIdeal[1] - state.rgb1[1],
-        refRgbIdeal[2] - state.rgb1[2],
+      const GAIN_MIN = 0.5, GAIN_MAX = 2.0;
+      const gain = [
+        Math.max(GAIN_MIN, Math.min(GAIN_MAX, refRgbIdeal[0] / Math.max(1, state.rgb1[0]))),
+        Math.max(GAIN_MIN, Math.min(GAIN_MAX, refRgbIdeal[1] / Math.max(1, state.rgb1[1]))),
+        Math.max(GAIN_MIN, Math.min(GAIN_MAX, refRgbIdeal[2] / Math.max(1, state.rgb1[2]))),
       ];
 
       // 3. 壁色に補正を適用
       const wallCorrected = [
-        Math.max(0, Math.min(255, state.rgb2[0] + correction[0])),
-        Math.max(0, Math.min(255, state.rgb2[1] + correction[1])),
-        Math.max(0, Math.min(255, state.rgb2[2] + correction[2])),
+        Math.max(0, Math.min(255, state.rgb2[0] * gain[0])),
+        Math.max(0, Math.min(255, state.rgb2[1] * gain[1])),
+        Math.max(0, Math.min(255, state.rgb2[2] * gain[2])),
       ];
 
       // 4. Munsell変換
