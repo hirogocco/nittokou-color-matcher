@@ -1273,13 +1273,13 @@ function doSearch() {
         Math.max(0, Math.min(255, state.rgb2[2] * gain[2])),
       ];
 
-      // 4. Munsell変換
-      const wallMunsell = rgbToMunsell(wallCorrected[0], wallCorrected[1], wallCorrected[2]);
+      // 4. 補正後RGBをLabに変換
+      const wallLab = rgbToLab(wallCorrected[0], wallCorrected[1], wallCorrected[2]);
 
-      // 5. DB全色と比較
+      // 5. DB全色とΔE2000で比較
       const results = state.db.map(entry => ({
         entry,
-        delta: munsellDist(wallMunsell, entry)
+        delta: deltaE2000(wallLab, [entry.L, entry.a, entry.b])
       })).sort((a,b) => a.delta - b.delta).slice(0, 5);
 
       hideLoading();
@@ -1410,32 +1410,79 @@ function rgbToMunsell(r, g, b) {
 
 // Munsell同士の距離
 function munsellDist(m1, m2) {
-  // Valueの差（明度）
+  // 旧関数：互換性のため残す
   const dV = (m1.V - m2.V) * 10;
-
-  // 無彩色の場合
   if (m1.H === 'N' || m2.H === 'N') {
-    const dC = m1.C + m2.C;
-    return Math.sqrt(dV*dV + dC*dC*2.5);
+    return Math.sqrt(dV*dV + (m1.C+m2.C)**2*2.5);
   }
+  const a1 = munsellHueToAngle(m1.H), a2 = munsellHueToAngle(m2.H);
+  const ab1x = m1.C*Math.cos(a1*Math.PI/180), ab1y = m1.C*Math.sin(a1*Math.PI/180);
+  const ab2x = m2.C*Math.cos(a2*Math.PI/180), ab2y = m2.C*Math.sin(a2*Math.PI/180);
+  return Math.sqrt(dV*dV + (ab1x-ab2x)**2 + (ab1y-ab2y)**2);
+}
 
-  // 色相差（円形）
-  const a1 = munsellHueToAngle(m1.H);
-  const a2 = munsellHueToAngle(m2.H);
-  let dH = Math.abs(a1 - a2);
-  if (dH > 180) dH = 360 - dH;
-  dH = dH * Math.PI / 180;
+// RGB → CIE L*a*b* (D65)
+function rgbToLab(r, g, b) {
+  // sRGB → linear
+  const lin = v => {
+    v /= 255;
+    return v <= 0.04045 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4);
+  };
+  const rl = lin(r), gl = lin(g), bl = lin(b);
+  // linear RGB → XYZ (D65)
+  const X = (rl*0.4124564 + gl*0.3575761 + bl*0.1804375) / 0.95047;
+  const Y = (rl*0.2126729 + gl*0.7151522 + bl*0.0721750) / 1.00000;
+  const Z = (rl*0.0193339 + gl*0.1191920 + bl*0.9503041) / 1.08883;
+  const f = t => t > 0.008856 ? Math.cbrt(t) : 7.787*t + 16/116;
+  const fx = f(X), fy = f(Y), fz = f(Z);
+  return [116*fy - 16, 500*(fx-fy), 200*(fy-fz)];
+}
 
-  const C1 = m1.C, C2 = m2.C;
-  const dC = C1 - C2;
-  // ab平面上の距離
-  const ab1x = C1 * Math.cos(a1 * Math.PI/180);
-  const ab1y = C1 * Math.sin(a1 * Math.PI/180);
-  const ab2x = C2 * Math.cos(a2 * Math.PI/180);
-  const ab2y = C2 * Math.sin(a2 * Math.PI/180);
-  const dAB = Math.sqrt((ab1x-ab2x)**2 + (ab1y-ab2y)**2);
-
-  return Math.sqrt(dV*dV + dAB*dAB);
+// ΔE2000
+function deltaE2000(lab1, lab2) {
+  const [L1,a1,b1] = lab1, [L2,a2,b2] = lab2;
+  const kL=1, kC=1, kH=1;
+  const C1 = Math.sqrt(a1*a1+b1*b1), C2 = Math.sqrt(a2*a2+b2*b2);
+  const Cb = (C1+C2)/2;
+  const Cb7 = Math.pow(Cb,7);
+  const G = 0.5*(1-Math.sqrt(Cb7/(Cb7+25**7)));
+  const a1p = a1*(1+G), a2p = a2*(1+G);
+  const C1p = Math.sqrt(a1p*a1p+b1*b1), C2p = Math.sqrt(a2p*a2p+b2*b2);
+  const h1p = (Math.atan2(b1,a1p)*180/Math.PI+360)%360;
+  const h2p = (Math.atan2(b2,a2p)*180/Math.PI+360)%360;
+  const dLp = L2-L1;
+  const dCp = C2p-C1p;
+  let dhp;
+  if (C1p*C2p===0) dhp=0;
+  else if (Math.abs(h2p-h1p)<=180) dhp=h2p-h1p;
+  else if (h2p-h1p>180) dhp=h2p-h1p-360;
+  else dhp=h2p-h1p+360;
+  const dHp = 2*Math.sqrt(C1p*C2p)*Math.sin(dhp*Math.PI/360);
+  const Lbp = (L1+L2)/2;
+  const Cbp = (C1p+C2p)/2;
+  let Hbp;
+  if (C1p*C2p===0) Hbp=h1p+h2p;
+  else if (Math.abs(h1p-h2p)<=180) Hbp=(h1p+h2p)/2;
+  else if (h1p+h2p<360) Hbp=(h1p+h2p+360)/2;
+  else Hbp=(h1p+h2p-360)/2;
+  const T = 1
+    -0.17*Math.cos((Hbp-30)*Math.PI/180)
+    +0.24*Math.cos(2*Hbp*Math.PI/180)
+    +0.32*Math.cos((3*Hbp+6)*Math.PI/180)
+    -0.20*Math.cos((4*Hbp-63)*Math.PI/180);
+  const SL = 1+0.015*Math.pow(Lbp-50,2)/Math.sqrt(20+Math.pow(Lbp-50,2));
+  const SC = 1+0.045*Cbp;
+  const SH = 1+0.015*Cbp*T;
+  const Cbp7 = Math.pow(Cbp,7);
+  const RC = 2*Math.sqrt(Cbp7/(Cbp7+25**7));
+  const dTheta = 30*Math.exp(-Math.pow((Hbp-275)/25,2));
+  const RT = -Math.sin(2*dTheta*Math.PI/180)*RC;
+  return Math.sqrt(
+    Math.pow(dLp/(kL*SL),2) +
+    Math.pow(dCp/(kC*SC),2) +
+    Math.pow(dHp/(kH*SH),2) +
+    RT*(dCp/(kC*SC))*(dHp/(kH*SH))
+  );
 }
 
 function munsellHueToAngle(h) {
