@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>日塗工カラーマッチャー モックアップ</title>
+<title>日塗工カラーマッチャー</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap');
 
@@ -22,1144 +22,1146 @@
     --shadow: 0 2px 20px rgba(0,0,0,0.08);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
   body {
-    background: #D4CFC7;
+    background: var(--bg);
     font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 24px 16px 48px;
-    gap: 12px;
-  }
-
-  /* ---- ナビゲーション ---- */
-  .nav {
-    display: flex;
-    gap: 8px;
-    background: rgba(255,255,255,0.6);
-    backdrop-filter: blur(10px);
-    border-radius: 100px;
-    padding: 6px;
-    position: sticky;
-    top: 12px;
-    z-index: 100;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
-  }
-  .nav-btn {
-    background: none;
-    border: none;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-sub);
-    padding: 6px 14px;
-    border-radius: 100px;
-    cursor: pointer;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  .nav-btn.active {
-    background: var(--text);
-    color: white;
-  }
-
-  /* ---- スマホフレーム ---- */
-  .phone {
-    width: 375px;
-    min-height: 812px;
-    background: var(--bg);
-    border-radius: 50px;
-    overflow: hidden;
-    box-shadow:
-      0 0 0 8px #1A1916,
-      0 30px 80px rgba(0,0,0,0.4);
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  /* ノッチ */
-  .notch {
-    width: 120px;
-    height: 34px;
-    background: #1A1916;
-    border-radius: 0 0 20px 20px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 10;
   }
 
   /* ---- 画面共通 ---- */
-  .screen {
-    display: none;
-    flex-direction: column;
-    height: calc(812px - 34px);
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-  .screen.active { display: flex; }
+  .screen { display:none; flex-direction:column; min-height:100vh; overflow-y:auto; overflow-x:hidden; }
+  .screen.active { display:flex; }
+  .screen::-webkit-scrollbar { display:none; }
 
-  /* スクロールバー非表示 */
-  .screen::-webkit-scrollbar { display: none; }
-
-  /* ---- トップ画面 ---- */
+  /* ---- トップ ---- */
   .top-hero {
     background: var(--text);
-    padding: 32px 24px 28px;
+    padding: 56px 24px 28px;
     color: white;
   }
   .app-label {
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    color: rgba(255,255,255,0.5);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-    font-family: 'DM Mono', monospace;
+    font-size:10px; font-weight:500; letter-spacing:0.15em;
+    color:rgba(255,255,255,0.5); text-transform:uppercase;
+    margin-bottom:8px; font-family:'DM Mono',monospace;
   }
-  .app-title {
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-  .app-subtitle {
-    font-size: 13px;
-    color: rgba(255,255,255,0.6);
-    font-weight: 300;
-  }
+  .app-title { font-size:26px; font-weight:700; line-height:1.2; margin-bottom:4px; }
+  .app-subtitle { font-size:13px; color:rgba(255,255,255,0.6); font-weight:300; }
 
   .how-to {
-    padding: 20px 24px;
-    background: var(--surface);
-    margin: 16px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
+    padding:20px; background:var(--surface);
+    margin:16px; border-radius:var(--radius); box-shadow:var(--shadow);
   }
   .how-to-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--text-sub);
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    font-family: 'DM Mono', monospace;
+    font-size:11px; font-weight:700; letter-spacing:0.1em;
+    color:var(--text-sub); text-transform:uppercase;
+    margin-bottom:14px; font-family:'DM Mono',monospace;
   }
-  .step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-  .step:last-child { margin-bottom: 0; }
+  .step { display:flex; align-items:flex-start; gap:12px; margin-bottom:12px; }
+  .step:last-child { margin-bottom:0; }
   .step-num {
-    width: 24px;
-    height: 24px;
-    background: var(--text);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 700;
-    flex-shrink: 0;
-    font-family: 'DM Mono', monospace;
+    width:24px; height:24px; background:var(--text); color:white;
+    border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-weight:700; flex-shrink:0; font-family:'DM Mono',monospace;
   }
-  .step-text {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--text);
-    padding-top: 2px;
-  }
-  .step-text strong { font-weight: 700; }
+  .step-text { font-size:13px; line-height:1.6; color:var(--text); padding-top:2px; }
+  .step-text strong { font-weight:700; }
 
-  .btn-group {
-    padding: 0 16px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .btn-group { padding:0 16px 32px; display:flex; flex-direction:column; gap:10px; }
   .btn-primary {
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 14px;
-    padding: 16px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: opacity 0.15s;
-    box-shadow: 0 4px 14px rgba(43,92,230,0.35);
+    background:var(--accent); color:white; border:none;
+    border-radius:14px; padding:16px;
+    font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 4px 14px rgba(43,92,230,0.35);
   }
   .btn-secondary {
-    background: var(--surface);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 15px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: opacity 0.15s;
+    background:var(--surface); color:var(--text);
+    border:1.5px solid var(--border); border-radius:14px; padding:15px;
+    font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:500;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
   }
-  .btn-primary:active, .btn-secondary:active { opacity: 0.7; }
-  .icon { font-size: 18px; }
+  .icon { font-size:18px; }
 
   /* ---- タップ画面 ---- */
   .tap-header {
-    background: var(--surface);
-    padding: 12px 16px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    background:var(--surface); padding:12px 16px 10px;
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:1px solid var(--border);
+    position:sticky; top:0; z-index:10;
   }
-  .tap-guide {
-    display: flex;
-    gap: 12px;
-  }
+  .tap-guide { display:flex; gap:12px; }
   .guide-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--surface2);
-    border-radius: 100px;
-    padding: 5px 10px;
-    font-size: 12px;
-    font-weight: 500;
+    display:flex; align-items:center; gap:6px;
+    background:var(--surface2); border-radius:100px; padding:5px 10px;
+    font-size:12px; font-weight:500;
   }
-  .guide-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .dot-red { background: var(--red); }
-  .dot-blue { background: var(--blue); }
+  .guide-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .dot-red { background:var(--red); }
+  .dot-blue { background:var(--blue); }
   .setting-btn {
-    background: var(--surface2);
-    border: none;
-    border-radius: 10px;
-    width: 34px;
-    height: 34px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    cursor: pointer;
+    background:var(--surface2); border:none; border-radius:10px;
+    width:34px; height:34px; display:flex; align-items:center; justify-content:center;
+    font-size:16px; cursor:pointer;
   }
 
+  /* 写真エリア */
   .photo-area {
-    position: relative;
-    background: #2A2825;
-    flex: 1;
-    min-height: 380px;
-    overflow: hidden;
+    position:relative; flex:1; min-height:340px;
+    background:#1A1916; overflow:hidden; touch-action:none;
   }
-
-  /* モック壁写真 */
-  .mock-wall {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background:
-      linear-gradient(135deg,
-        #C8BBA8 0%, #BFB49F 20%,
-        #C4B8A5 40%, #BAB09C 60%,
-        #C2B7A3 80%, #BDB29E 100%
-      );
+  #photoCanvas {
+    position:absolute; top:0; left:0;
+    width:100%; height:100%; object-fit:contain;
+    touch-action:none;
   }
-  /* テクスチャ感 */
-  .mock-wall::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
-    opacity: 0.4;
+  .photo-placeholder {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    color:rgba(255,255,255,0.3); gap:8px;
   }
-
-  /* 色見本帳 */
-  .mock-swatch {
-    position: absolute;
-    bottom: 60px;
-    right: 30px;
-    width: 80px;
-    background: white;
-    border-radius: 6px;
-    padding: 6px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-    transform: rotate(3deg);
-  }
-  .swatch-row {
-    display: flex;
-    gap: 3px;
-    margin-bottom: 3px;
-  }
-  .swatch-row:last-child { margin-bottom: 0; }
-  .swatch-chip {
-    width: 18px;
-    height: 14px;
-    border-radius: 2px;
-  }
+  .photo-placeholder .ph-icon { font-size:40px; }
+  .photo-placeholder .ph-text { font-size:13px; }
 
   /* ルーペ */
   .loupe {
-    position: absolute;
-    top: 12px;
-    left: 12px;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: 3px solid white;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    overflow: hidden;
-    background: #BEB49F;
+    position:absolute; top:12px; left:12px;
+    width:80px; height:80px; border-radius:50%;
+    border:3px solid white; box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    overflow:hidden; display:none; pointer-events:none; z-index:20;
   }
-  .loupe-inner {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-  }
-  .loupe-px { border-radius: 0; }
+  .loupe.show { display:block; }
+  #loupeCanvas { width:100%; height:100%; display:block; }
   .loupe-crosshair {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 12px;
-    height: 12px;
+    position:absolute; top:50%; left:50%;
+    transform:translate(-50%,-50%); width:14px; height:14px; pointer-events:none;
   }
-  .loupe-crosshair::before,
-  .loupe-crosshair::after {
-    content: '';
-    position: absolute;
-    background: rgba(255,255,255,0.8);
+  .loupe-crosshair::before, .loupe-crosshair::after {
+    content:''; position:absolute; background:rgba(255,255,255,0.9);
   }
-  .loupe-crosshair::before {
-    width: 1px;
-    height: 12px;
-    left: 50%;
-    top: 0;
-  }
-  .loupe-crosshair::after {
-    width: 12px;
-    height: 1px;
-    top: 50%;
-    left: 0;
-  }
+  .loupe-crosshair::before { width:1px; height:14px; left:50%; top:0; }
+  .loupe-crosshair::after { width:14px; height:1px; top:50%; left:0; }
 
   /* マーカー */
   .marker {
-    position: absolute;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2.5px solid white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    transform: translate(-50%, -50%);
+    position:absolute; border-radius:50%;
+    border:2.5px solid white; box-shadow:0 2px 8px rgba(0,0,0,0.5);
+    transform:translate(-50%,-50%); pointer-events:none; display:none; z-index:15;
   }
-  .marker-red { background: var(--red); top: 42%; left: 35%; }
-  .marker-blue { background: var(--blue); bottom: 35%; right: 40%; transform: translate(50%, 50%); }
+  #marker1 { background:var(--red); width:22px; height:22px; }
+  #marker2 { background:var(--blue); width:22px; height:22px; }
 
   /* 下部コントロール */
   .tap-bottom {
-    background: var(--surface);
-    padding: 12px 16px 16px;
-    border-top: 1px solid var(--border);
+    background:var(--surface); padding:12px 16px 24px;
+    border-top:1px solid var(--border);
   }
-  .color-preview-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-  }
+  .color-preview-row { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
   .color-preview-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    background: var(--surface2);
-    border-radius: 10px;
-    padding: 8px 10px;
+    display:flex; align-items:center; gap:8px; flex:1;
+    background:var(--surface2); border-radius:10px; padding:8px 10px;
   }
+  .color-preview-item.clickable { cursor:pointer; }
   .preview-circle {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
+    width:28px; height:28px; border-radius:50%;
+    border:2.5px solid var(--border); flex-shrink:0;
+    background:#DDDDDD;
   }
-  .preview-info { flex: 1; }
-  .preview-label {
-    font-size: 10px;
-    color: var(--text-sub);
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-  }
-  .preview-rgb {
-    font-size: 11px;
-    color: var(--text);
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
+  .preview-info { flex:1; }
+  .preview-label { font-size:10px; color:var(--text-sub); font-weight:500; font-family:'DM Mono',monospace; }
+  .preview-rgb { font-size:11px; color:var(--text); font-weight:500; font-family:'DM Mono',monospace; }
+  .ref-code-badge {
+    font-size:10px; font-weight:700; color:var(--accent);
+    font-family:'DM Mono',monospace; background:#EEF2FD;
+    border-radius:4px; padding:1px 5px; display:inline-block; margin-top:1px;
   }
   .btn-search {
-    width: 100%;
-    background: var(--accent);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(43,92,230,0.35);
+    width:100%; background:var(--accent); color:white; border:none;
+    border-radius:12px; padding:14px;
+    font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:700;
+    cursor:pointer; box-shadow:0 4px 14px rgba(43,92,230,0.35);
   }
   .btn-search:disabled {
-    background: var(--border);
-    color: var(--text-sub);
-    box-shadow: none;
+    background:var(--border); color:var(--text-sub); box-shadow:none; cursor:default;
   }
 
   /* ---- 結果画面 ---- */
   .result-header {
-    background: var(--surface);
-    padding: 14px 16px 12px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    background:var(--surface); padding:52px 16px 12px;
+    border-bottom:1px solid var(--border);
   }
-  .result-title {
-    font-size: 15px;
-    font-weight: 700;
-  }
-  .result-sub {
-    font-size: 11px;
-    color: var(--text-sub);
-    font-family: 'DM Mono', monospace;
-  }
+  .result-title { font-size:15px; font-weight:700; }
+  .result-sub { font-size:11px; color:var(--text-sub); font-family:'DM Mono',monospace; }
 
-  /* 取得色サマリー */
   .result-colors {
-    background: var(--surface);
-    margin: 12px 16px 0;
-    border-radius: var(--radius);
-    padding: 14px;
-    box-shadow: var(--shadow);
-    display: flex;
-    gap: 12px;
+    background:var(--surface); margin:12px 16px 0;
+    border-radius:var(--radius); padding:14px;
+    box-shadow:var(--shadow); display:flex; gap:12px;
   }
-  .result-color-item {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .result-color-item { flex:1; display:flex; align-items:center; gap:10px; }
   .result-color-circle {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
+    width:36px; height:36px; border-radius:50%;
+    border:2px solid var(--border); flex-shrink:0;
   }
-  .result-color-info {}
-  .result-color-label {
-    font-size: 10px;
-    color: var(--text-sub);
-    font-weight: 500;
-    font-family: 'DM Mono', monospace;
-  }
-  .result-color-val {
-    font-size: 12px;
-    font-weight: 600;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-  }
-  .result-divider {
-    width: 1px;
-    background: var(--border);
-    align-self: stretch;
-  }
+  .result-color-label { font-size:10px; color:var(--text-sub); font-weight:500; font-family:'DM Mono',monospace; }
+  .result-color-val { font-size:12px; font-weight:600; font-family:'DM Mono',monospace; color:var(--text); }
+  .result-divider { width:1px; background:var(--border); align-self:stretch; }
 
-  /* 候補リスト */
   .candidates-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--text-sub);
-    text-transform: uppercase;
-    font-family: 'DM Mono', monospace;
-    padding: 16px 16px 8px;
+    font-size:11px; font-weight:700; letter-spacing:0.1em;
+    color:var(--text-sub); text-transform:uppercase;
+    font-family:'DM Mono',monospace; padding:16px 16px 8px;
   }
-  .candidate-list {
-    padding: 0 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
+  .candidate-list { padding:0 16px; display:flex; flex-direction:column; gap:8px; }
   .candidate-card {
-    background: var(--surface);
-    border-radius: 14px;
-    padding: 14px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    box-shadow: var(--shadow);
-    border: 1.5px solid transparent;
-    transition: border-color 0.2s;
+    background:var(--surface); border-radius:14px; padding:14px;
+    display:flex; align-items:center; gap:14px;
+    box-shadow:var(--shadow); border:1.5px solid transparent;
   }
-  .candidate-card.top {
-    border-color: var(--accent);
-  }
+  .candidate-card.top { border-color:var(--accent); }
   .candidate-rank {
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--text-sub);
-    font-family: 'DM Mono', monospace;
-    width: 20px;
-    text-align: center;
+    font-size:11px; font-weight:700; color:var(--text-sub);
+    font-family:'DM Mono',monospace; width:20px; text-align:center;
   }
-  .candidate-rank.rank1 { color: var(--accent); }
+  .candidate-rank.rank1 { color:var(--accent); }
   .candidate-color {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
+    width:40px; height:40px; border-radius:10px;
+    border:1.5px solid var(--border); flex-shrink:0;
   }
-  .candidate-info { flex: 1; }
+  .candidate-info { flex:1; }
   .candidate-code {
-    font-size: 16px;
-    font-weight: 700;
-    font-family: 'DM Mono', monospace;
-    color: var(--text);
-    letter-spacing: 0.05em;
+    font-size:16px; font-weight:700; font-family:'DM Mono',monospace;
+    color:var(--text); letter-spacing:0.05em;
   }
-  .candidate-munsell {
-    font-size: 11px;
-    color: var(--text-sub);
-    font-family: 'DM Mono', monospace;
-    margin-top: 2px;
-  }
-  .candidate-delta {
-    font-size: 12px;
-    font-family: 'DM Mono', monospace;
-    color: var(--text-sub);
-    text-align: right;
-  }
-  .candidate-delta span {
-    display: block;
-    font-size: 10px;
-    margin-bottom: 2px;
-  }
-  .delta-val { font-weight: 700; color: var(--text); font-size: 14px !important; }
-
+  .candidate-munsell { font-size:11px; color:var(--text-sub); font-family:'DM Mono',monospace; margin-top:2px; }
+  .candidate-delta { font-size:12px; font-family:'DM Mono',monospace; color:var(--text-sub); text-align:right; }
+  .candidate-delta span { display:block; font-size:10px; margin-bottom:2px; }
+  .delta-val { font-weight:700; color:var(--text); font-size:14px !important; }
   .best-badge {
-    background: var(--accent);
-    color: white;
-    font-size: 9px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 100px;
-    font-family: 'DM Mono', monospace;
-    letter-spacing: 0.05em;
-    margin-left: 6px;
-    vertical-align: middle;
+    background:var(--accent); color:white; font-size:9px; font-weight:700;
+    padding:2px 7px; border-radius:100px; font-family:'DM Mono',monospace;
+    letter-spacing:0.05em; margin-left:6px; vertical-align:middle;
   }
-
-  .result-footer {
-    padding: 16px;
-    margin-top: 4px;
-  }
+  .result-footer { padding:16px; margin-top:4px; padding-bottom:32px; }
   .btn-back {
-    width: 100%;
-    background: var(--surface);
-    color: var(--text);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    width:100%; background:var(--surface); color:var(--text);
+    border:1.5px solid var(--border); border-radius:12px; padding:14px;
+    font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:500;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
   }
 
-  /* ---- ポップアップ（設定） ---- */
+  /* ---- オーバーレイ共通 ---- */
   .overlay {
-    display: none;
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.5);
-    z-index: 50;
-    align-items: flex-end;
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.5); z-index:50; align-items:flex-end;
   }
-  .overlay.show { display: flex; }
+  .overlay.show { display:flex; }
+
+  /* ---- 設定ポップアップ ---- */
   .popup {
-    background: var(--surface);
-    width: 100%;
-    border-radius: 20px 20px 0 0;
-    padding: 20px 20px 32px;
+    background:var(--surface); width:100%;
+    border-radius:20px 20px 0 0; padding:20px 20px 40px;
   }
-  .popup-title {
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    text-align: center;
-  }
-  .popup-label {
-    font-size: 11px;
-    color: var(--text-sub);
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    margin-bottom: 10px;
-  }
-  .drum-roll {
-    background: var(--surface2);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
+  .popup-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:0 auto 16px; }
+  .popup-title { font-size:14px; font-weight:700; margin-bottom:16px; text-align:center; }
+  .popup-label { font-size:11px; color:var(--text-sub); font-family:'DM Mono',monospace; font-weight:500; margin-bottom:10px; }
+  .drum-roll { background:var(--surface2); border-radius:12px; overflow:hidden; margin-bottom:20px; }
   .drum-item {
-    padding: 13px 16px;
-    font-size: 15px;
-    font-family: 'DM Mono', monospace;
-    font-weight: 500;
-    color: var(--text-sub);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
+    padding:13px 16px; font-size:15px; font-family:'DM Mono',monospace; font-weight:500;
+    color:var(--text-sub); border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between; cursor:pointer;
   }
-  .drum-item:last-child { border-bottom: none; }
-  .drum-item.selected {
-    color: var(--accent);
-    font-weight: 700;
-  }
-  .drum-check { color: var(--accent); font-size: 16px; }
+  .drum-item:last-child { border-bottom:none; }
+  .drum-item.selected { color:var(--accent); font-weight:700; }
+  .drum-check { color:var(--accent); font-size:16px; }
   .popup-close {
-    width: 100%;
-    background: var(--text);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    padding: 14px;
-    font-family: 'Noto Sans JP', sans-serif;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
+    width:100%; background:var(--text); color:white; border:none;
+    border-radius:12px; padding:14px;
+    font-family:'Noto Sans JP',sans-serif; font-size:15px; font-weight:700; cursor:pointer;
   }
 
-  /* ---- 基準色候補スライドアップ ---- */
-  .ref-overlay {
-    display: none;
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 50;
-    align-items: flex-end;
-  }
-  .ref-overlay.show { display: flex; }
+  /* ---- 基準色候補パネル ---- */
   .ref-panel {
-    background: var(--surface);
-    width: 100%;
-    border-radius: 20px 20px 0 0;
-    padding: 0 0 24px;
-    max-height: 75%;
-    overflow-y: auto;
+    background:var(--surface); width:100%;
+    border-radius:20px 20px 0 0; padding:0 0 40px;
+    max-height:80vh; overflow-y:auto;
   }
-  .ref-panel-handle {
-    width: 36px; height: 4px;
-    background: var(--border);
-    border-radius: 2px;
-    margin: 10px auto 12px;
-  }
+  .ref-panel::-webkit-scrollbar { display:none; }
+  .ref-panel-handle { width:36px; height:4px; background:var(--border); border-radius:2px; margin:10px auto 12px; }
   .ref-panel-title {
-    font-size: 12px; font-weight: 700;
-    color: var(--text-sub);
-    padding: 0 16px 8px;
-    font-family: "DM Mono", monospace;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size:12px; font-weight:700; color:var(--text-sub);
+    padding:0 16px 8px; font-family:'DM Mono',monospace;
+    letter-spacing:0.06em; text-transform:uppercase;
   }
   .ref-candidate {
-    display: flex; align-items: center; gap: 12px;
-    padding: 11px 16px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer;
+    display:flex; align-items:center; gap:12px;
+    padding:11px 16px; border-bottom:1px solid var(--border); cursor:pointer;
   }
-  .ref-candidate.selected { background: #EEF2FD; }
-  .ref-cand-color {
-    width: 34px; height: 34px;
-    border-radius: 8px;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
-  }
-  .ref-cand-info { flex: 1; }
-  .ref-cand-code {
-    font-size: 15px; font-weight: 700;
-    font-family: "DM Mono", monospace;
-    color: var(--text);
-  }
-  .ref-cand-munsell {
-    font-size: 11px; color: var(--text-sub);
-    font-family: "DM Mono", monospace;
-  }
-  .ref-cand-check { color: var(--accent); font-size: 18px; opacity: 0; }
-  .ref-candidate.selected .ref-cand-check { opacity: 1; }
+  .ref-candidate.selected { background:#EEF2FD; }
+  .ref-cand-color { width:34px; height:34px; border-radius:8px; border:1.5px solid var(--border); flex-shrink:0; }
+  .ref-cand-info { flex:1; }
+  .ref-cand-code { font-size:15px; font-weight:700; font-family:'DM Mono',monospace; color:var(--text); }
+  .ref-cand-munsell { font-size:11px; color:var(--text-sub); font-family:'DM Mono',monospace; }
+  .ref-cand-check { color:var(--accent); font-size:18px; opacity:0; }
+  .ref-candidate.selected .ref-cand-check { opacity:1; }
   .ref-manual-btn {
-    display: flex; align-items: center; gap: 8px;
-    padding: 13px 16px;
-    color: var(--accent); font-size: 14px; font-weight: 500;
-    border: none; background: none; width: 100%;
-    font-family: "Noto Sans JP", sans-serif; cursor: pointer;
+    display:flex; align-items:center; gap:8px; padding:13px 16px;
+    color:var(--accent); font-size:14px; font-weight:500;
+    border:none; background:none; width:100%;
+    font-family:'Noto Sans JP',sans-serif; cursor:pointer;
   }
-  .ref-code-badge {
-    font-size: 10px; font-weight: 700;
-    color: var(--accent);
-    font-family: "DM Mono", monospace;
-    background: #EEF2FD;
-    border-radius: 4px; padding: 1px 5px;
-    display: inline-block; margin-top: 1px;
-  }
-  .manual-input-area { display: none; padding: 8px 16px 4px; }
-  .manual-input-area.show { display: block; }
+  .manual-input-area { display:none; padding:8px 16px 4px; }
+  .manual-input-area.show { display:block; }
   .manual-input {
-    width: 100%; border: 1.5px solid var(--accent);
-    border-radius: 10px; padding: 10px 12px;
-    font-size: 15px; font-family: "DM Mono", monospace;
-    font-weight: 600; color: var(--text); background: var(--surface);
-    outline: none; letter-spacing: 0.05em;
+    width:100%; border:1.5px solid var(--accent); border-radius:10px;
+    padding:10px 12px; font-size:15px; font-family:'DM Mono',monospace;
+    font-weight:600; color:var(--text); background:var(--surface);
+    outline:none; letter-spacing:0.05em;
   }
-  .manual-input::placeholder { color: var(--border); font-weight: 400; }
+  .manual-input::placeholder { color:var(--border); font-weight:400; }
   .manual-confirm-btn {
-    width: 100%; margin-top: 8px;
-    background: var(--accent); color: white; border: none;
-    border-radius: 10px; padding: 11px;
-    font-family: "Noto Sans JP", sans-serif;
-    font-size: 14px; font-weight: 700; cursor: pointer;
+    width:100%; margin-top:8px; background:var(--accent); color:white; border:none;
+    border-radius:10px; padding:11px;
+    font-family:'Noto Sans JP',sans-serif; font-size:14px; font-weight:700; cursor:pointer;
   }
 
-  /* レスポンシブ（スマホ実機表示） */
-  @media (max-width: 420px) {
-    body { padding: 0; background: var(--bg); }
-    .phone {
-      border-radius: 0;
-      box-shadow: none;
-      width: 100%;
-      min-height: 100vh;
-    }
-    .nav { display: none; }
+  /* ローディング */
+  .loading-overlay {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.6); z-index:100;
+    align-items:center; justify-content:center; flex-direction:column; gap:12px;
   }
+  .loading-overlay.show { display:flex; }
+  .spinner {
+    width:36px; height:36px; border:3px solid rgba(255,255,255,0.3);
+    border-top-color:white; border-radius:50%;
+    animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .loading-text { color:white; font-size:14px; font-weight:500; }
+
+  /* hidden file input */
+  #fileInput { display:none; }
 </style>
 </head>
 <body>
 
-<!-- ナビ -->
-<nav class="nav">
-  <button class="nav-btn active" onclick="showScreen('top')">① トップ</button>
-  <button class="nav-btn" onclick="showScreen('tap')">② タップ</button>
-  <button class="nav-btn" onclick="showScreen('result')">③ 結果</button>
-</nav>
+<!-- hidden inputs -->
+<input type="file" id="fileInput" accept="image/*">
+<canvas id="offscreen" style="display:none"></canvas>
 
-<!-- スマホ -->
-<div class="phone">
-  <div class="notch"></div>
+<!-- ローディング -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-text" id="loadingText">処理中...</div>
+</div>
 
-  <!-- ① トップ画面 -->
-  <div class="screen active" id="screen-top">
-    <div class="top-hero">
-      <div class="app-label">JPMA Color Matcher</div>
-      <div class="app-title">日塗工<br>カラーマッチャー</div>
-      <div class="app-subtitle">壁の色を日塗工番号で特定する</div>
+<!-- ① トップ画面 -->
+<div class="screen active" id="screen-top">
+  <div class="top-hero">
+    <div class="app-label">JPMA Color Matcher</div>
+    <div class="app-title">日塗工<br>カラーマッチャー</div>
+    <div class="app-subtitle">壁の色を日塗工番号で特定する</div>
+  </div>
+  <div class="how-to">
+    <div class="how-to-title">使い方</div>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-text"><strong>色見本帳を壁にくっつけて</strong>、壁と色見本が同じフレームに入るよう撮影します</div>
     </div>
-
-    <div class="how-to">
-      <div class="how-to-title">使い方</div>
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-text"><strong>色見本帳を壁にくっつけて</strong>、壁と色見本が同じフレームに入るよう撮影します</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-text">写真上で<strong>①色見本の基準色</strong>と<strong>②壁の色</strong>をタップします</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-text">「検索」を押すと、<strong>近い日塗工番号を5件</strong>候補として表示します</div>
-      </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-text">写真上で<strong>①基準色</strong>をタップして日塗工番号を確定し、<strong>②壁の色</strong>をタップします</div>
     </div>
-
-    <div class="btn-group">
-      <button class="btn-primary" onclick="showScreen('tap')">
-        <span class="icon">📷</span> カメラで撮影
-      </button>
-      <button class="btn-secondary" onclick="showScreen('tap')">
-        <span class="icon">🖼️</span> ライブラリから選ぶ
-      </button>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-text">「検索」を押すと<strong>近い日塗工番号を5件</strong>候補として表示します</div>
     </div>
   </div>
+  <div class="btn-group">
+    <button class="btn-primary" onclick="startCamera()">
+      <span class="icon">📷</span> カメラで撮影
+    </button>
+    <button class="btn-secondary" onclick="openLibrary()">
+      <span class="icon">🖼️</span> ライブラリから選ぶ
+    </button>
+  </div>
+</div>
 
-  <!-- ② タップ画面 -->
-  <div class="screen" id="screen-tap">
-    <div class="tap-header">
-      <div class="tap-guide">
-        <div class="guide-pill">
-          <div class="guide-dot dot-red"></div>
-          <span>① 基準色</span>
-        </div>
-        <div class="guide-pill">
-          <div class="guide-dot dot-blue"></div>
-          <span>② 壁</span>
-        </div>
-      </div>
-      <button class="setting-btn" onclick="togglePopup()">⚙️</button>
+<!-- ② タップ画面 -->
+<div class="screen" id="screen-tap">
+  <div class="tap-header">
+    <div class="tap-guide">
+      <div class="guide-pill"><div class="guide-dot dot-red"></div><span>① 基準色</span></div>
+      <div class="guide-pill"><div class="guide-dot dot-blue"></div><span>② 壁</span></div>
     </div>
+    <button class="setting-btn" onclick="togglePopup()">⚙️</button>
+  </div>
 
-    <div class="photo-area">
-      <div class="mock-wall"></div>
-
-      <!-- ルーペ -->
-      <div class="loupe">
-        <div class="loupe-inner" id="loupeGrid"></div>
-        <div class="loupe-crosshair"></div>
-      </div>
-
-      <!-- 色見本帳 -->
-      <div class="mock-swatch">
-        <div class="swatch-row">
-          <div class="swatch-chip" style="background:#E8D5B5"></div>
-          <div class="swatch-chip" style="background:#D4C4A0"></div>
-          <div class="swatch-chip" style="background:#C8B890"></div>
-          <div class="swatch-chip" style="background:#BBA87A"></div>
-        </div>
-        <div class="swatch-row">
-          <div class="swatch-chip" style="background:#C8D4C0"></div>
-          <div class="swatch-chip" style="background:#B8C8B0"></div>
-          <div class="swatch-chip" style="background:#A8B8A0"></div>
-          <div class="swatch-chip" style="background:#98A890"></div>
-        </div>
-        <div class="swatch-row">
-          <div class="swatch-chip" style="background:#D4D0C8"></div>
-          <div class="swatch-chip" style="background:#C8C4BC"></div>
-          <div class="swatch-chip" style="background:#BCBAB0"></div>
-          <div class="swatch-chip" style="background:#B0ACA4"></div>
-        </div>
-      </div>
-
-      <!-- マーカー -->
-      <div class="marker marker-red"></div>
-      <div class="marker marker-blue"></div>
+  <div class="photo-area" id="photoArea">
+    <canvas id="photoCanvas"></canvas>
+    <div class="photo-placeholder" id="photoPlaceholder">
+      <div class="ph-icon">🖼️</div>
+      <div class="ph-text">写真を読み込み中...</div>
     </div>
+    <div class="loupe" id="loupe">
+      <canvas id="loupeCanvas" width="80" height="80"></canvas>
+      <div class="loupe-crosshair"></div>
+    </div>
+    <div class="marker" id="marker1"></div>
+    <div class="marker" id="marker2"></div>
+  </div>
 
-    <div class="tap-bottom">
-      <div class="color-preview-row">
-        <div class="color-preview-item" onclick="showRefPanel()" style="cursor:pointer;">
-          <div class="preview-circle" style="background:#BEB49F; border-color:var(--red); border-width:2.5px;"></div>
-          <div class="preview-info">
-            <div class="preview-label">① 基準色</div>
-            <div class="preview-rgb" id="refRgb">190,180,159</div>
-            <div class="ref-code-badge" id="refBadge">09-70H</div>
-          </div>
-        </div>
-        <div class="color-preview-item">
-          <div class="preview-circle" style="background:#C8C4BC; border-color:var(--blue); border-width:2.5px;"></div>
-          <div class="preview-info">
-            <div class="preview-label">② 壁</div>
-            <div class="preview-rgb">200,196,188</div>
-          </div>
+  <div class="tap-bottom">
+    <div class="color-preview-row">
+      <div class="color-preview-item clickable" onclick="showRefPanel()">
+        <div class="preview-circle" id="refCircle" style="border-color:var(--red);"></div>
+        <div class="preview-info">
+          <div class="preview-label">① 基準色</div>
+          <div class="preview-rgb" id="refRgbText">未取得</div>
+          <div class="ref-code-badge" id="refBadge">番号未設定</div>
         </div>
       </div>
-      <button class="btn-search" onclick="showScreen('result')">検索</button>
-    </div>
-
-
-    <!-- 基準色候補スライドアップパネル -->
-    <div class="ref-overlay" id="refOverlay" onclick="closeRefPanel(event)">
-      <div class="ref-panel">
-        <div class="ref-panel-handle"></div>
-        <div class="ref-panel-title">① 基準色の番号を選択</div>
-
-        <div class="ref-candidate selected" onclick="selectRef(this,'09-70H','#C0B8A2','10YR 7.0/6')">
-          <div class="ref-cand-color" style="background:#C0B8A2;"></div>
-          <div class="ref-cand-info">
-            <div class="ref-cand-code">09-70H</div>
-            <div class="ref-cand-munsell">10YR 7.0/6</div>
-          </div>
-          <div class="ref-cand-check">✓</div>
-        </div>
-        <div class="ref-candidate" onclick="selectRef(this,'09-70T','#BDB49E','10YR 7.0/9')">
-          <div class="ref-cand-color" style="background:#BDB49E;"></div>
-          <div class="ref-cand-info">
-            <div class="ref-cand-code">09-70T</div>
-            <div class="ref-cand-munsell">10YR 7.0/9</div>
-          </div>
-          <div class="ref-cand-check">✓</div>
-        </div>
-        <div class="ref-candidate" onclick="selectRef(this,'09-70D','#C5BFB2','10YR 7.0/4')">
-          <div class="ref-cand-color" style="background:#C5BFB2;"></div>
-          <div class="ref-cand-info">
-            <div class="ref-cand-code">09-70D</div>
-            <div class="ref-cand-munsell">10YR 7.0/4</div>
-          </div>
-          <div class="ref-cand-check">✓</div>
-        </div>
-        <div class="ref-candidate" onclick="selectRef(this,'07-70L','#BDB5A6','7.5YR 7.0/7')">
-          <div class="ref-cand-color" style="background:#BDB5A6;"></div>
-          <div class="ref-cand-info">
-            <div class="ref-cand-code">07-70L</div>
-            <div class="ref-cand-munsell">7.5YR 7.0/7</div>
-          </div>
-          <div class="ref-cand-check">✓</div>
-        </div>
-        <div class="ref-candidate" onclick="selectRef(this,'12-70T','#C3BCA8','2.5Y 7.0/9')">
-          <div class="ref-cand-color" style="background:#C3BCA8;"></div>
-          <div class="ref-cand-info">
-            <div class="ref-cand-code">12-70T</div>
-            <div class="ref-cand-munsell">2.5Y 7.0/9</div>
-          </div>
-          <div class="ref-cand-check">✓</div>
-        </div>
-
-        <!-- 該当なし・直接入力 -->
-        <button class="ref-manual-btn" onclick="toggleManualInput()">
-          ＋ 該当なし・直接入力
-        </button>
-        <div class="manual-input-area" id="manualInputArea">
-          <input class="manual-input" type="text" placeholder="例: 09-70H" id="manualCode" />
-          <button class="manual-confirm-btn" onclick="confirmManual()">確定</button>
+      <div class="color-preview-item">
+        <div class="preview-circle" id="wallCircle" style="border-color:var(--blue);"></div>
+        <div class="preview-info">
+          <div class="preview-label">② 壁</div>
+          <div class="preview-rgb" id="wallRgbText">未取得</div>
         </div>
       </div>
     </div>
+    <button class="btn-search" id="searchBtn" disabled onclick="doSearch()">検索</button>
+  </div>
 
-    <!-- 設定ポップアップ -->
-    <div class="overlay" id="settingOverlay" onclick="closePopup(event)">
-      <div class="popup">
-        <div class="popup-title">取得エリアサイズ</div>
-        <div class="popup-label">半径（ピクセル）</div>
-        <div class="drum-roll">
-          <div class="drum-item" onclick="selectSize(this, '5px')">5 px</div>
-          <div class="drum-item" onclick="selectSize(this, '10px')">10 px</div>
-          <div class="drum-item selected" onclick="selectSize(this, '20px')">20 px <span class="drum-check">✓</span></div>
-          <div class="drum-item" onclick="selectSize(this, '30px')">30 px</div>
-          <div class="drum-item" onclick="selectSize(this, '50px')">50 px</div>
-        </div>
-        <button class="popup-close" onclick="closePopupDirect()">完了</button>
+  <!-- 基準色候補パネル -->
+  <div class="overlay" id="refOverlay" onclick="closeRefPanel(event)">
+    <div class="ref-panel">
+      <div class="ref-panel-handle"></div>
+      <div class="ref-panel-title">① 基準色の番号を選択</div>
+      <div id="refCandidateList"></div>
+      <button class="ref-manual-btn" onclick="toggleManualInput()">＋ 該当なし・直接入力</button>
+      <div class="manual-input-area" id="manualInputArea">
+        <input class="manual-input" type="text" placeholder="例: 09-70H" id="manualCode" />
+        <button class="manual-confirm-btn" onclick="confirmManual()">確定</button>
       </div>
     </div>
   </div>
 
-  <!-- ③ 結果画面 -->
-  <div class="screen" id="screen-result">
-    <div class="result-header">
+  <!-- 設定ポップアップ -->
+  <div class="overlay" id="settingOverlay" onclick="closeSettingPanel(event)">
+    <div class="popup">
+      <div class="popup-handle"></div>
+      <div class="popup-title">取得エリアサイズ</div>
+      <div class="popup-label">半径（ピクセル）</div>
+      <div class="drum-roll" id="drumRoll">
+        <div class="drum-item" onclick="selectSize(this,5)">5 px</div>
+        <div class="drum-item" onclick="selectSize(this,10)">10 px</div>
+        <div class="drum-item selected" onclick="selectSize(this,20)">20 px <span class="drum-check">✓</span></div>
+        <div class="drum-item" onclick="selectSize(this,30)">30 px</div>
+        <div class="drum-item" onclick="selectSize(this,50)">50 px</div>
+      </div>
+      <button class="popup-close" onclick="closeSettingDirect()">完了</button>
+    </div>
+  </div>
+</div>
+
+<!-- ③ 結果画面 -->
+<div class="screen" id="screen-result">
+  <div class="result-header">
+    <div class="result-title">検索結果</div>
+    <div class="result-sub">上位5候補</div>
+  </div>
+  <div class="result-colors">
+    <div class="result-color-item">
+      <div class="result-color-circle" id="resRefCircle"></div>
       <div>
-        <div class="result-title">検索結果</div>
-        <div class="result-sub">上位5候補</div>
+        <div class="result-color-label">① 基準色</div>
+        <div class="result-color-val" id="resRefRgb"></div>
+        <div class="ref-code-badge" id="resRefBadge"></div>
       </div>
     </div>
-
-    <div class="result-colors">
-      <div class="result-color-item">
-        <div class="result-color-circle" style="background:#BEB49F;"></div>
-        <div class="result-color-info">
-          <div class="result-color-label">① 基準色</div>
-          <div class="result-color-val">190,180,159</div>
-          <div class="ref-code-badge">09-70H</div>
-        </div>
+    <div class="result-divider"></div>
+    <div class="result-color-item">
+      <div class="result-color-circle" id="resWallCircle"></div>
+      <div>
+        <div class="result-color-label">② 壁</div>
+        <div class="result-color-val" id="resWallRgb"></div>
       </div>
-      <div class="result-divider"></div>
-      <div class="result-color-item">
-        <div class="result-color-circle" style="background:#C8C4BC;"></div>
-        <div class="result-color-info">
-          <div class="result-color-label">② 壁</div>
-          <div class="result-color-val">200,196,188</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="candidates-label">候補</div>
-    <div class="candidate-list">
-
-      <div class="candidate-card top">
-        <div class="candidate-rank rank1">#1</div>
-        <div class="candidate-color" style="background:#BDB49E;"></div>
-        <div class="candidate-info">
-          <div class="candidate-code">09-70T <span class="best-badge">BEST</span></div>
-          <div class="candidate-munsell">10YR 7.0/9</div>
-        </div>
-        <div class="candidate-delta">
-          <span>ΔE</span>
-          <div class="delta-val">2.4</div>
-        </div>
-      </div>
-
-      <div class="candidate-card">
-        <div class="candidate-rank">#2</div>
-        <div class="candidate-color" style="background:#C0B7A2;"></div>
-        <div class="candidate-info">
-          <div class="candidate-code">09-70H</div>
-          <div class="candidate-munsell">10YR 7.0/6</div>
-        </div>
-        <div class="candidate-delta">
-          <span>ΔE</span>
-          <div class="delta-val">3.8</div>
-        </div>
-      </div>
-
-      <div class="candidate-card">
-        <div class="candidate-rank">#3</div>
-        <div class="candidate-color" style="background:#BDB5A6;"></div>
-        <div class="candidate-info">
-          <div class="candidate-code">07-70L</div>
-          <div class="candidate-munsell">7.5YR 7.0/7</div>
-        </div>
-        <div class="candidate-delta">
-          <span>ΔE</span>
-          <div class="delta-val">5.1</div>
-        </div>
-      </div>
-
-      <div class="candidate-card">
-        <div class="candidate-rank">#4</div>
-        <div class="candidate-color" style="background:#C3BBAB;"></div>
-        <div class="candidate-info">
-          <div class="candidate-code">12-70L</div>
-          <div class="candidate-munsell">2.5Y 7.0/7</div>
-        </div>
-        <div class="candidate-delta">
-          <span>ΔE</span>
-          <div class="delta-val">6.7</div>
-        </div>
-      </div>
-
-      <div class="candidate-card">
-        <div class="candidate-rank">#5</div>
-        <div class="candidate-color" style="background:#C6BEAC;"></div>
-        <div class="candidate-info">
-          <div class="candidate-code">09-80D</div>
-          <div class="candidate-munsell">10YR 8.0/4</div>
-        </div>
-        <div class="candidate-delta">
-          <span>ΔE</span>
-          <div class="delta-val">7.9</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="result-footer">
-      <button class="btn-back" onclick="showScreen('top')">
-        ← トップに戻る
-      </button>
     </div>
   </div>
-
-</div><!-- /phone -->
+  <div class="candidates-label">候補</div>
+  <div class="candidate-list" id="candidateList"></div>
+  <div class="result-footer">
+    <button class="btn-back" onclick="goTop()">← トップに戻る</button>
+  </div>
+</div>
 
 <script>
-  // ---- 画面切り替え ----
-  function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('screen-' + name).classList.add('active');
-    const idx = {top:0, tap:1, result:2}[name];
-    document.querySelectorAll('.nav-btn')[idx].classList.add('active');
-    document.getElementById('screen-' + name).scrollTop = 0;
+// ============================================================
+// 状態管理
+// ============================================================
+const state = {
+  db: [],
+  image: null,       // HTMLImageElement
+  imgW: 0, imgH: 0,  // 画像の実サイズ
+  canvasW: 0, canvasH: 0, // canvas表示サイズ
+  offsetX: 0, offsetY: 0, // object-fit:contain のオフセット
+  scaleX: 1, scaleY: 1,   // 表示→実ピクセル倍率
+  tap1: null,  // {x,y} in 画像座標
+  tap2: null,
+  rgb1: null,  // [r,g,b]
+  rgb2: null,
+  refCode: null,
+  areaRadius: 20,
+  activeTap: null,  // 'tap1' or 'tap2'
+};
+
+// ============================================================
+// DB読み込み
+// ============================================================
+async function loadDB() {
+  try {
+    const res = await fetch('nittokou_munsell.json');
+    state.db = await res.json();
+    console.log(`DB読み込み完了: ${state.db.length}色`);
+  } catch(e) {
+    console.error('DB読み込みエラー:', e);
+  }
+}
+loadDB();
+
+// ============================================================
+// 画面遷移
+// ============================================================
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('screen-' + name).scrollTop = 0;
+}
+
+function goTop() {
+  state.tap1 = state.tap2 = state.rgb1 = state.rgb2 = state.refCode = null;
+  document.getElementById('marker1').style.display = 'none';
+  document.getElementById('marker2').style.display = 'none';
+  document.getElementById('refCircle').style.background = '#DDDDDD';
+  document.getElementById('wallCircle').style.background = '#DDDDDD';
+  document.getElementById('refRgbText').textContent = '未取得';
+  document.getElementById('wallRgbText').textContent = '未取得';
+  document.getElementById('refBadge').textContent = '番号未設定';
+  document.getElementById('searchBtn').disabled = true;
+  showScreen('top');
+}
+
+// ============================================================
+// カメラ / ライブラリ
+// ============================================================
+function startCamera() {
+  const input = document.getElementById('fileInput');
+  input.setAttribute('capture', 'environment');
+  input.click();
+}
+function openLibrary() {
+  const input = document.getElementById('fileInput');
+  input.removeAttribute('capture');
+  input.click();
+}
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  showLoading('画像を読み込み中...');
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      state.image = img;
+      state.imgW = img.naturalWidth;
+      state.imgH = img.naturalHeight;
+      showScreen('tap');
+      setTimeout(() => { drawPhoto(); hideLoading(); }, 100);
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+});
+
+// ============================================================
+// 写真描画
+// ============================================================
+function drawPhoto() {
+  const area = document.getElementById('photoArea');
+  const canvas = document.getElementById('photoCanvas');
+  const img = state.image;
+  if (!img) return;
+
+  const aW = area.clientWidth;
+  const aH = area.clientHeight;
+  canvas.width = aW;
+  canvas.height = aH;
+  state.canvasW = aW;
+  state.canvasH = aH;
+
+  // object-fit:contain の計算
+  const imgAspect = img.naturalWidth / img.naturalHeight;
+  const areaAspect = aW / aH;
+  let drawW, drawH, offX, offY;
+  if (imgAspect > areaAspect) {
+    drawW = aW; drawH = aW / imgAspect;
+    offX = 0; offY = (aH - drawH) / 2;
+  } else {
+    drawH = aH; drawW = aH * imgAspect;
+    offX = (aW - drawW) / 2; offY = 0;
+  }
+  state.offsetX = offX; state.offsetY = offY;
+  state.scaleX = img.naturalWidth / drawW;
+  state.scaleY = img.naturalHeight / drawH;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, aW, aH);
+  ctx.drawImage(img, offX, offY, drawW, drawH);
+
+  document.getElementById('photoPlaceholder').style.display = 'none';
+}
+
+// ============================================================
+// タッチ操作
+// ============================================================
+let isTouching = false;
+
+document.getElementById('photoCanvas').addEventListener('touchstart', e => {
+  e.preventDefault();
+  isTouching = true;
+  handleTouch(e.touches[0]);
+}, {passive: false});
+
+document.getElementById('photoCanvas').addEventListener('touchmove', e => {
+  e.preventDefault();
+  if (isTouching) handleTouch(e.touches[0]);
+}, {passive: false});
+
+document.getElementById('photoCanvas').addEventListener('touchend', e => {
+  e.preventDefault();
+  isTouching = false;
+  // 確定
+  if (state.activeTap === 'tap1' && state.tap1) confirmTap1();
+  if (state.activeTap === 'tap2' && state.tap2) confirmTap2();
+  document.getElementById('loupe').classList.remove('show');
+  state.activeTap = null;
+});
+
+function handleTouch(touch) {
+  const canvas = document.getElementById('photoCanvas');
+  const rect = canvas.getBoundingClientRect();
+  const cx = touch.clientX - rect.left;  // canvas座標
+  const cy = touch.clientY - rect.top;
+
+  // 画像座標に変換
+  const ix = (cx - state.offsetX) * state.scaleX;
+  const iy = (cy - state.offsetY) * state.scaleY;
+  if (ix < 0 || iy < 0 || ix >= state.imgW || iy >= state.imgH) return;
+
+  // どちらのタップか：まだtap1がなければtap1、tap2がなければtap2
+  // どちらかの近くをタップしたら上書き
+  if (state.activeTap === null) {
+    const THRESHOLD = 40;
+    const near1 = state.tap1 && dist(cx, cy, canvasX(state.tap1.x), canvasY(state.tap1.y)) < THRESHOLD;
+    const near2 = state.tap2 && dist(cx, cy, canvasX(state.tap2.x), canvasY(state.tap2.y)) < THRESHOLD;
+    if (near1) state.activeTap = 'tap1';
+    else if (near2) state.activeTap = 'tap2';
+    else if (!state.tap1) state.activeTap = 'tap1';
+    else state.activeTap = 'tap2';
   }
 
+  if (state.activeTap === 'tap1') state.tap1 = {x: ix, y: iy};
+  else state.tap2 = {x: ix, y: iy};
 
-  // ---- 基準色パネル ----
-  function showRefPanel() {
-    document.getElementById('refOverlay').classList.add('show');
-  }
-  function closeRefPanel(e) {
-    if (e.target === document.getElementById('refOverlay')) {
-      document.getElementById('refOverlay').classList.remove('show');
+  updateLoupe(ix, iy, cx, cy);
+  updateMarker(state.activeTap, cx, cy);
+}
+
+function dist(x1,y1,x2,y2) { return Math.sqrt((x1-x2)**2+(y1-y2)**2); }
+function canvasX(imgX) { return imgX / state.scaleX + state.offsetX; }
+function canvasY(imgY) { return imgY / state.scaleY + state.offsetY; }
+
+function updateMarker(which, cx, cy) {
+  const id = which === 'tap1' ? 'marker1' : 'marker2';
+  const el = document.getElementById(id);
+  el.style.display = 'block';
+  el.style.left = cx + 'px';
+  el.style.top = cy + 'px';
+}
+
+function confirmTap1() {
+  const rgb = getAreaAvgRGB(state.tap1.x, state.tap1.y);
+  state.rgb1 = rgb;
+  const col = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+  document.getElementById('refCircle').style.background = col;
+  document.getElementById('refRgbText').textContent = rgb.join(',');
+  // 基準色候補を更新してパネル表示
+  buildRefCandidates(rgb);
+  showRefPanel();
+  checkSearchBtn();
+}
+
+function confirmTap2() {
+  const rgb = getAreaAvgRGB(state.tap2.x, state.tap2.y);
+  state.rgb2 = rgb;
+  const col = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+  document.getElementById('wallCircle').style.background = col;
+  document.getElementById('wallRgbText').textContent = rgb.join(',');
+  checkSearchBtn();
+}
+
+function checkSearchBtn() {
+  const ok = state.rgb1 && state.rgb2 && state.refCode;
+  document.getElementById('searchBtn').disabled = !ok;
+}
+
+// ============================================================
+// ルーペ
+// ============================================================
+function updateLoupe(imgX, imgY, cx, cy) {
+  if (!state.image) return;
+  const loupe = document.getElementById('loupe');
+  loupe.classList.add('show');
+
+  const lc = document.getElementById('loupeCanvas');
+  const lCtx = lc.getContext('2d');
+  const ZOOM = 8;
+  const HALF = 5; // 表示する半径（画像px）
+  const SIZE = lc.width;
+
+  lCtx.clearRect(0, 0, SIZE, SIZE);
+
+  // 拡大描画
+  lCtx.save();
+  lCtx.beginPath();
+  lCtx.arc(SIZE/2, SIZE/2, SIZE/2, 0, Math.PI*2);
+  lCtx.clip();
+  lCtx.imageSmoothingEnabled = false;
+  lCtx.drawImage(
+    state.image,
+    imgX - HALF, imgY - HALF, HALF*2, HALF*2,
+    0, 0, SIZE, SIZE
+  );
+
+  // 外れ値ピクセルをグレーアウト
+  const delta = state.areaRadius;
+  const threshold = 30;
+  const centerRGB = getPixelRGB(Math.round(imgX), Math.round(imgY));
+  const pxSize = SIZE / (HALF * 2);
+
+  for (let py = 0; py < HALF*2; py++) {
+    for (let px2 = 0; px2 < HALF*2; px2++) {
+      const pix = getPixelRGB(Math.round(imgX - HALF + px2), Math.round(imgY - HALF + py));
+      if (pix && deltaE_simple(centerRGB, pix) > threshold) {
+        lCtx.fillStyle = 'rgba(150,150,150,0.7)';
+        lCtx.fillRect(px2 * pxSize, py * pxSize, pxSize, pxSize);
+      }
     }
   }
-  function selectRef(el, code, color, munsell) {
-    document.querySelectorAll('.ref-candidate').forEach(d => d.classList.remove('selected'));
-    el.classList.add('selected');
-    document.getElementById('refBadge').textContent = code;
+  lCtx.restore();
+}
+
+// ============================================================
+// RGB取得（エリア平均 + 外れ値除去）
+// ============================================================
+function getPixelRGB(x, y) {
+  if (!state.image) return null;
+  const canvas = document.getElementById('offscreen');
+  if (canvas.width !== state.imgW || canvas.height !== state.imgH) {
+    canvas.width = state.imgW;
+    canvas.height = state.imgH;
+    canvas.getContext('2d').drawImage(state.image, 0, 0);
+  }
+  const ctx = canvas.getContext('2d');
+  const x2 = Math.max(0, Math.min(state.imgW-1, Math.round(x)));
+  const y2 = Math.max(0, Math.min(state.imgH-1, Math.round(y)));
+  const d = ctx.getImageData(x2, y2, 1, 1).data;
+  return [d[0], d[1], d[2]];
+}
+
+function getAreaAvgRGB(cx, cy) {
+  const r = state.areaRadius;
+  const canvas = document.getElementById('offscreen');
+  if (canvas.width !== state.imgW || canvas.height !== state.imgH) {
+    canvas.width = state.imgW;
+    canvas.height = state.imgH;
+    canvas.getContext('2d').drawImage(state.image, 0, 0);
+  }
+  const ctx = canvas.getContext('2d');
+  const x1 = Math.max(0, Math.round(cx - r));
+  const y1 = Math.max(0, Math.round(cy - r));
+  const x2 = Math.min(state.imgW - 1, Math.round(cx + r));
+  const y2 = Math.min(state.imgH - 1, Math.round(cy + r));
+  const data = ctx.getImageData(x1, y1, x2-x1+1, y2-y1+1).data;
+
+  // 中心ピクセルのRGBを基準に
+  const center = getPixelRGB(cx, cy);
+  const THRESHOLD = 30;
+
+  let sumR=0, sumG=0, sumB=0, count=0;
+  const w = x2-x1+1;
+  for (let i=0; i < data.length; i+=4) {
+    const pix = [data[i], data[i+1], data[i+2]];
+    if (deltaE_simple(center, pix) <= THRESHOLD) {
+      sumR += pix[0]; sumG += pix[1]; sumB += pix[2]; count++;
+    }
+  }
+  if (count === 0) return center;
+  return [Math.round(sumR/count), Math.round(sumG/count), Math.round(sumB/count)];
+}
+
+// ============================================================
+// 基準色候補パネル
+// ============================================================
+function buildRefCandidates(rgb) {
+  if (state.db.length === 0) return;
+  // 写真RGBをMunsellに変換して近い色を5件取得
+  const munsell = rgbToMunsell(rgb[0], rgb[1], rgb[2]);
+  const scored = state.db.map(entry => ({
+    entry,
+    d: munsellDist(munsell, entry)
+  })).sort((a,b) => a.d - b.d).slice(0, 5);
+
+  const list = document.getElementById('refCandidateList');
+  list.innerHTML = '';
+  scored.forEach((item, idx) => {
+    const e = item.entry;
+    const rgb2 = munsellToRGB(e.H, e.V, e.C);
+    const col = `rgb(${rgb2[0]},${rgb2[1]},${rgb2[2]})`;
+    const div = document.createElement('div');
+    div.className = 'ref-candidate' + (idx===0 ? ' selected' : '');
+    div.innerHTML = `
+      <div class="ref-cand-color" style="background:${col};"></div>
+      <div class="ref-cand-info">
+        <div class="ref-cand-code">${e.code}</div>
+        <div class="ref-cand-munsell">${e.H} ${e.V}/${e.C}</div>
+      </div>
+      <div class="ref-cand-check">✓</div>
+    `;
+    div.onclick = () => selectRef(div, e.code);
+    list.appendChild(div);
+  });
+
+  // 初期選択
+  if (scored.length > 0) {
+    state.refCode = scored[0].entry.code;
+    document.getElementById('refBadge').textContent = state.refCode;
+    checkSearchBtn();
+  }
+}
+
+function showRefPanel() {
+  document.getElementById('refOverlay').classList.add('show');
+}
+function closeRefPanel(e) {
+  if (e.target === document.getElementById('refOverlay'))
     document.getElementById('refOverlay').classList.remove('show');
-    document.getElementById('manualInputArea').classList.remove('show');
-  }
-  function toggleManualInput() {
-    document.getElementById('manualInputArea').classList.toggle('show');
-  }
-  function confirmManual() {
-    const val = document.getElementById('manualCode').value.trim();
-    if (val) {
-      document.getElementById('refBadge').textContent = val;
-      document.getElementById('refOverlay').classList.remove('show');
-      document.getElementById('manualInputArea').classList.remove('show');
-    }
-  }
+}
+function selectRef(el, code) {
+  document.querySelectorAll('.ref-candidate').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  state.refCode = code;
+  document.getElementById('refBadge').textContent = code;
+  document.getElementById('refOverlay').classList.remove('show');
+  document.getElementById('manualInputArea').classList.remove('show');
+  checkSearchBtn();
+}
+function toggleManualInput() {
+  document.getElementById('manualInputArea').classList.toggle('show');
+}
+function confirmManual() {
+  const val = document.getElementById('manualCode').value.trim().toUpperCase();
+  if (!val) return;
+  state.refCode = val;
+  document.getElementById('refBadge').textContent = val;
+  document.getElementById('refOverlay').classList.remove('show');
+  document.getElementById('manualInputArea').classList.remove('show');
+  checkSearchBtn();
+}
 
-  // ---- ルーペグリッド生成 ----
-  const baseColor = [190, 180, 159];
-  const grid = document.getElementById('loupeGrid');
-  for (let i = 0; i < 25; i++) {
-    const px = document.createElement('div');
-    px.className = 'loupe-px';
-    const dx = ((i % 5) - 2) * 3;
-    const dy = (Math.floor(i / 5) - 2) * 3;
-    const dist = Math.sqrt(dx*dx + dy*dy);
-    // 外れ値ピクセル（グレーアウト）
-    if (i === 3 || i === 19 || i === 20) {
-      px.style.background = '#AAAAAA';
-    } else {
-      const r = Math.min(255, baseColor[0] + dx + dy + Math.random()*4|0);
-      const g = Math.min(255, baseColor[1] + dx * 0.8 + Math.random()*4|0);
-      const b = Math.min(255, baseColor[2] + dy * 0.6 + Math.random()*4|0);
-      px.style.background = `rgb(${r},${g},${b})`;
-    }
-    grid.appendChild(px);
-  }
-
-  // ---- ポップアップ ----
-  function togglePopup() {
-    document.getElementById('settingOverlay').classList.add('show');
-  }
-  function closePopup(e) {
-    if (e.target === document.getElementById('settingOverlay')) {
-      document.getElementById('settingOverlay').classList.remove('show');
-    }
-  }
-  function closePopupDirect() {
+// ============================================================
+// 設定
+// ============================================================
+function togglePopup() { document.getElementById('settingOverlay').classList.add('show'); }
+function closeSettingPanel(e) {
+  if (e.target === document.getElementById('settingOverlay'))
     document.getElementById('settingOverlay').classList.remove('show');
+}
+function closeSettingDirect() { document.getElementById('settingOverlay').classList.remove('show'); }
+function selectSize(el, size) {
+  document.querySelectorAll('.drum-item').forEach(d => {
+    d.classList.remove('selected');
+    d.innerHTML = d.innerHTML.replace(/ <span class="drum-check">✓<\/span>/,'');
+  });
+  el.classList.add('selected');
+  el.innerHTML += ' <span class="drum-check">✓</span>';
+  state.areaRadius = size;
+}
+
+// ============================================================
+// 検索（メイン処理）
+// ============================================================
+function doSearch() {
+  if (!state.rgb1 || !state.rgb2 || !state.refCode) return;
+  showLoading('色を解析中...');
+
+  setTimeout(() => {
+    try {
+      // 1. 基準色のDBエントリを取得
+      const refEntry = state.db.find(e => e.code === state.refCode);
+      if (!refEntry) { hideLoading(); alert('基準色番号が見つかりません: ' + state.refCode); return; }
+
+      // 2. 照明補正係数を計算（基準色の写真RGB vs DB Munsell→RGB）
+      const refRgbIdeal = munsellToRGB(refEntry.H, refEntry.V, refEntry.C);
+      const correction = [
+        refRgbIdeal[0] - state.rgb1[0],
+        refRgbIdeal[1] - state.rgb1[1],
+        refRgbIdeal[2] - state.rgb1[2],
+      ];
+
+      // 3. 壁色に補正を適用
+      const wallCorrected = [
+        Math.max(0, Math.min(255, state.rgb2[0] + correction[0])),
+        Math.max(0, Math.min(255, state.rgb2[1] + correction[1])),
+        Math.max(0, Math.min(255, state.rgb2[2] + correction[2])),
+      ];
+
+      // 4. Munsell変換
+      const wallMunsell = rgbToMunsell(wallCorrected[0], wallCorrected[1], wallCorrected[2]);
+
+      // 5. DB全色と比較
+      const results = state.db.map(entry => ({
+        entry,
+        delta: munsellDist(wallMunsell, entry)
+      })).sort((a,b) => a.delta - b.delta).slice(0, 5);
+
+      hideLoading();
+      showResults(results);
+    } catch(e) {
+      hideLoading();
+      console.error(e);
+      alert('エラーが発生しました');
+    }
+  }, 100);
+}
+
+function showResults(results) {
+  // 結果画面のサマリー更新
+  const r1 = state.rgb1, r2 = state.rgb2;
+  document.getElementById('resRefCircle').style.background = `rgb(${r1[0]},${r1[1]},${r1[2]})`;
+  document.getElementById('resWallCircle').style.background = `rgb(${r2[0]},${r2[1]},${r2[2]})`;
+  document.getElementById('resRefRgb').textContent = r1.join(',');
+  document.getElementById('resWallRgb').textContent = r2.join(',');
+  document.getElementById('resRefBadge').textContent = state.refCode;
+
+  // 候補リスト描画
+  const list = document.getElementById('candidateList');
+  list.innerHTML = '';
+  results.forEach((item, idx) => {
+    const e = item.entry;
+    const rgb = munsellToRGB(e.H, e.V, e.C);
+    const col = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+    const card = document.createElement('div');
+    card.className = 'candidate-card' + (idx===0 ? ' top' : '');
+    card.innerHTML = `
+      <div class="candidate-rank ${idx===0?'rank1':''}">#${idx+1}</div>
+      <div class="candidate-color" style="background:${col};"></div>
+      <div class="candidate-info">
+        <div class="candidate-code">${e.code}${idx===0?'<span class="best-badge">BEST</span>':''}</div>
+        <div class="candidate-munsell">${e.H} ${e.V}/${e.C}</div>
+      </div>
+      <div class="candidate-delta"><span>ΔE</span><div class="delta-val">${item.delta.toFixed(1)}</div></div>
+    `;
+    list.appendChild(card);
+  });
+
+  showScreen('result');
+}
+
+// ============================================================
+// 色変換ユーティリティ
+// ============================================================
+
+// RGB → XYZ (sRGB, D65)
+function rgbToXYZ(r, g, b) {
+  let R = r/255, G = g/255, B = b/255;
+  R = R > 0.04045 ? ((R+0.055)/1.055)**2.4 : R/12.92;
+  G = G > 0.04045 ? ((G+0.055)/1.055)**2.4 : G/12.92;
+  B = B > 0.04045 ? ((B+0.055)/1.055)**2.4 : B/12.92;
+  return [
+    R*0.4124564 + G*0.3575761 + B*0.1804375,
+    R*0.2126729 + G*0.7151522 + B*0.0721750,
+    R*0.0193339 + G*0.1191920 + B*0.9503041,
+  ];
+}
+
+// XYZ → Lab (D65)
+function xyzToLab(X, Y, Z) {
+  const Xn=0.95047, Yn=1.0, Zn=1.08883;
+  const f = t => t > 0.008856 ? t**(1/3) : 7.787*t + 16/116;
+  const fx=f(X/Xn), fy=f(Y/Yn), fz=f(Z/Zn);
+  return [116*fy-16, 500*(fx-fy), 200*(fy-fz)];
+}
+
+// Lab → Munsell（近似）
+function labToMunsell(L, a, b) {
+  // Value: L* ≈ 10*V - 0.432*V^2 + ... 簡易近似
+  const V = L / 10;
+
+  // Chroma: C* = sqrt(a^2+b^2) ≈ 2.5 * Munsell Chroma
+  const Cstar = Math.sqrt(a*a + b*b);
+  const C = Cstar / 2.5;
+
+  // Hue: a*b* → Munsell hue angle
+  const angle = (Math.atan2(b, a) * 180 / Math.PI + 360) % 360;
+
+  // hue angle → Munsell hue string
+  const H = angleToMunsellHue(angle);
+  return { H, V: Math.max(0, Math.min(10, V)), C: Math.max(0, C) };
+}
+
+const HUE_TABLE = [
+  {min:0,   max:18,  hue:'2.5R'},
+  {min:18,  max:36,  hue:'5R'},
+  {min:36,  max:54,  hue:'7.5R'},
+  {min:54,  max:72,  hue:'10R'},
+  {min:72,  max:90,  hue:'2.5YR'},
+  {min:90,  max:108, hue:'5YR'},
+  {min:108, max:126, hue:'7.5YR'},
+  {min:126, max:144, hue:'10YR'},
+  {min:144, max:162, hue:'2.5Y'},
+  {min:162, max:180, hue:'5Y'},
+  {min:180, max:198, hue:'7.5Y'},
+  {min:198, max:216, hue:'10Y'},
+  {min:216, max:234, hue:'2.5GY'},
+  {min:234, max:252, hue:'5GY'},
+  {min:252, max:270, hue:'7.5GY'},
+  {min:270, max:288, hue:'10GY'},
+  {min:288, max:306, hue:'5BG'},
+  {min:306, max:324, hue:'5B'},
+  {min:324, max:342, hue:'5PB'},
+  {min:342, max:360, hue:'5P'},
+];
+
+function angleToMunsellHue(angle) {
+  for (const row of HUE_TABLE) {
+    if (angle >= row.min && angle < row.max) return row.hue;
   }
-  function selectSize(el, size) {
-    document.querySelectorAll('.drum-item').forEach(d => {
-      d.classList.remove('selected');
-      d.innerHTML = d.innerHTML.replace(' <span class="drum-check">✓</span>', '');
-    });
-    el.classList.add('selected');
-    el.innerHTML += ' <span class="drum-check">✓</span>';
+  return '5R';
+}
+
+function rgbToMunsell(r, g, b) {
+  const xyz = rgbToXYZ(r, g, b);
+  const lab = xyzToLab(...xyz);
+  // 無彩色チェック
+  const Cstar = Math.sqrt(lab[1]**2 + lab[2]**2);
+  if (Cstar < 3) {
+    return { H: 'N', V: lab[0]/10, C: 0 };
   }
+  return labToMunsell(...lab);
+}
+
+// Munsell同士の距離
+function munsellDist(m1, m2) {
+  // Valueの差（明度）
+  const dV = (m1.V - m2.V) * 10;
+
+  // 無彩色の場合
+  if (m1.H === 'N' || m2.H === 'N') {
+    const dC = m1.C + m2.C;
+    return Math.sqrt(dV*dV + dC*dC*2.5);
+  }
+
+  // 色相差（円形）
+  const a1 = munsellHueToAngle(m1.H);
+  const a2 = munsellHueToAngle(m2.H);
+  let dH = Math.abs(a1 - a2);
+  if (dH > 180) dH = 360 - dH;
+  dH = dH * Math.PI / 180;
+
+  const C1 = m1.C, C2 = m2.C;
+  const dC = C1 - C2;
+  // ab平面上の距離
+  const ab1x = C1 * Math.cos(a1 * Math.PI/180);
+  const ab1y = C1 * Math.sin(a1 * Math.PI/180);
+  const ab2x = C2 * Math.cos(a2 * Math.PI/180);
+  const ab2y = C2 * Math.sin(a2 * Math.PI/180);
+  const dAB = Math.sqrt((ab1x-ab2x)**2 + (ab1y-ab2y)**2);
+
+  return Math.sqrt(dV*dV + dAB*dAB);
+}
+
+function munsellHueToAngle(h) {
+  for (const row of HUE_TABLE) {
+    if (row.hue === h) return (row.min + row.max) / 2;
+  }
+  return 0;
+}
+
+// Munsell → RGB（近似・表示用）
+function munsellToRGB(H, V, C) {
+  if (H === 'N' || C === 0) {
+    const v = Math.round(V / 10 * 255);
+    return [v, v, v];
+  }
+  const angle = munsellHueToAngle(H) * Math.PI / 180;
+  const Cstar = C * 2.5;
+  const L = V * 10;
+  const a = Cstar * Math.cos(angle);
+  const b2 = Cstar * Math.sin(angle);
+  return labToRGB(L, a, b2);
+}
+
+function labToRGB(L, a, b) {
+  const fy = (L + 16) / 116;
+  const fx = a / 500 + fy;
+  const fz = fy - b / 200;
+  const Xn=0.95047, Yn=1.0, Zn=1.08883;
+  const X = Xn * (fx**3 > 0.008856 ? fx**3 : (fx - 16/116)/7.787);
+  const Y = Yn * (fy**3 > 0.008856 ? fy**3 : (fy - 16/116)/7.787);
+  const Z = Zn * (fz**3 > 0.008856 ? fz**3 : (fz - 16/116)/7.787);
+  let R = X* 3.2404542 + Y*-1.5371385 + Z*-0.4985314;
+  let G = X*-0.9692660 + Y* 1.8760108 + Z* 0.0415560;
+  let B = X* 0.0556434 + Y*-0.2040259 + Z* 1.0572252;
+  const gc = v => v > 0.0031308 ? 1.055*v**(1/2.4)-0.055 : 12.92*v;
+  return [
+    Math.max(0, Math.min(255, Math.round(gc(R)*255))),
+    Math.max(0, Math.min(255, Math.round(gc(G)*255))),
+    Math.max(0, Math.min(255, Math.round(gc(B)*255))),
+  ];
+}
+
+// 簡易ΔE（RGB空間、外れ値検出用）
+function deltaE_simple(rgb1, rgb2) {
+  return Math.sqrt(
+    (rgb1[0]-rgb2[0])**2 +
+    (rgb1[1]-rgb2[1])**2 +
+    (rgb1[2]-rgb2[2])**2
+  ) / Math.sqrt(3);
+}
+
+// ============================================================
+// ローディング
+// ============================================================
+function showLoading(text) {
+  document.getElementById('loadingText').textContent = text || '処理中...';
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+// ============================================================
+// ウィンドウリサイズ対応
+// ============================================================
+window.addEventListener('resize', () => {
+  if (state.image) drawPhoto();
+});
 </script>
 </body>
 </html>
